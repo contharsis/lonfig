@@ -150,6 +150,7 @@ Icons
 pick "Adwaita - The Only One"
 Settings
 uncheck "Show images on buttons"
+uncheck "Show images in menus"
 
 Super
 Desktop
