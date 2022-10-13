@@ -162,11 +162,14 @@ Icons
 Default Icons
 uncheck everything
 
+Alt + E
+take picture of folder background
 sudo apt install gimp
 Super
 GNU Image Manipulation Program
-create black and gray(rgb(45, 45, 45)) images,
-named black.png and gray.png, export them to ~/Desktop
+create black image, name it black.png, create new empty image and paste the folder background image
+copy the color and create new image with that color, usually named gray.png
+save black.png and gray.png, export them to ~/Desktop
 sudo mv ~/Desktop/black.png ~/Desktop/gray.png /usr/share/pixmaps
 sudo vim /etc/default/grub
 remove "splash" from GRUB_CMDLINE_LINUX_DEFAULT
@@ -204,6 +207,9 @@ double-click "Close window" shortcut, set to alt + q
 
 change toggle fullscreen shortcut
 double-click "Maximize window", set to alt + f
+
+change hide window shortcut
+double-click "Hide window", set to alt + z
 
 disable frame around selected windows and center all windows
 Super
@@ -360,6 +366,9 @@ openssh-client - ssh client
 openssh-server - ssh server
 unar - operate with .rar files
 pmount - automatic mount as user
+curl - transfer a URL
+wget - non-interactive network downloader
+inxi - system information script
 redshift - display color temperature adjuster
 htop - interactive process viewer
 gimp - graphical editor
@@ -410,8 +419,9 @@ systemctl --user daemon-reload
 systemctl --user enable redshift.service
 sudo reboot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-qbittorrent dark theme
+qbittorrent
 
+setup dark theme
 download from https://gitlab.com/qbittorrent-black-theme/client
 cd ~/Downloads
 git clone https://gitlab.com/qbittorrent-black-theme/client.git
@@ -433,6 +443,15 @@ UI Theme file, click folder icon, set it to "/home/<username>/.config/qbittorren
 change tray icon to dark theme
 Desktop
 Tray icon style, pick "Monochrome (for dark theme)"
+
+change torrent folder
+mkdir ~/torrents
+Tools
+Preferences...
+Downloads
+Saving Management
+Default Save Path, set to /home/<username>/torrents
+restart qbittorrent
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 firefox
 
