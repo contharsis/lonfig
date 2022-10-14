@@ -61,9 +61,15 @@ sudo reboot
 
 enable bash completion
 sudo apt install bash-completion
-close current terminal and open new one
+sudo reboot
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+install drivers
 
-install any necessary drivers
+if you are on nvidia, read from https://wiki.debian.org/NvidiaGraphicsDrivers
+enable contrib and non-free repos, look down in extra features
+sudo apt install linux-headers-amd64
+sudo apt update
+sudo apt install nvidia-driver firmware-misc-nonfree
 sudo reboot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 install vim
@@ -548,6 +554,16 @@ click "Add/edit entry to Blacklist", you can remove quotes if you want, click "A
 -------------------------------------------------------------------------
 extra features
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+enable contrib and non-free repositories
+
+sudo vim /etc/apt/sources.list
+after "deb http://deb.debian.org/debian/ bullseye main"
+and "deb-src http://deb.debian.org/debian/ bullseye main"
+add "contrib non-free", so it looks like this
+"deb http://deb.debian.org/debian/ bullseye main contrib non-free"
+"deb-src http://deb.debian.org/debian/ bullseye main contrib non-free"
+sudo apt update
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 create desktop and search entries for programs
 
