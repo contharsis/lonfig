@@ -65,12 +65,84 @@ sudo reboot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 install drivers
 
-if you are on nvidia, read from https://wiki.debian.org/NvidiaGraphicsDrivers
+for graphics driver https://wiki.debian.org/GraphicsCard
 enable contrib and non-free repos, look down in extra features
-sudo apt install linux-headers-amd64
 sudo apt update
+
+if you are on amd https://wiki.debian.org/AtiHowTo
+identify you are on amd
+lspci -nn | grep VGA
+part of the output should look something like this
+"01:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Barts PRO [Radeon HD 6850] [1002:6739]"
+sudo apt install firmware-amd-graphics libgl1-mesa-dri libglx-mesa0 mesa-vulkan-drivers xserver-xorg-video-all
+sudo reboot
+sudo dpkg --add-architecture i386
+sudo apt update
+sudo apt install libglx-mesa0:i386 mesa-vulkan-drivers:i386 libgl1-mesa-dri:i386
+performance check
+sudo apt install radeontop
+manage your gpu fans
+sudo pip3 install amdgpu-fan
+sudo vim /etc/amdgpu-fan.yml, add to file
+"
+speed_matrix:  # -[temp(*C), speed(0-100%)]
+- [0, 0]
+- [30, 15]
+- [50, 30]
+- [70, 70]
+- [90, 100]
+"
+sudo vim /etc/systemd/system/amdgpu-fan.service, add to file
+"
+[Unit]
+Description=Service for controling amdgpu fan.
+After=syslog.service
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/local/bin/amdgpu-fan
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+"
+sudo systemctl daemon-reload
+sudo systemctl enable amdgpu-fan.service
+sudo reboot
+
+if you are on nvidia https://wiki.debian.org/NvidiaGraphicsDrivers
+identify you are on nvidia
+lspci -nn | egrep -i "3d|display|vga"
+part of the output should look something like this
+"07:00.0 VGA compatible controller [0300]: NVIDIA Corporation GM206 [GeForce GTX 960] [10de:1401] (rev a1)"
+sudo apt install linux-headers-amd64
 sudo apt install nvidia-driver firmware-misc-nonfree
 sudo reboot
+enable 32-bit support
+sudo dpkg --add-architecture i386
+sudo apt update
+sudo apt install nvidia-driver-libs:i386
+
+if you want to detect gpu
+sudo apt install nvidia-detect
+
+test performance with mesa https://wiki.debian.org/Mesa#Testingperformance
+sudo apt install mesa-utils
+check your gpu
+glxinfo | grep OpenGL
+output should look similar to this
+"
+OpenGL vendor string: Intel Open Source Technology Center # The manufacturer
+OpenGL renderer string: Mesa DRI Intel(R) Haswell Desktop  # The type of the chip
+OpenGL core profile version string: 3.3 (Core Profile) Mesa 10.3.2 # The OpenGL version fully supported, here 3.3 thanks to Mesa 10.3.2 .
+OpenGL core profile shading language version string: 3.30 # The GLSL version fully supported
+"
+glxinfo  | grep rendering
+output should be
+"direct rendering: Yes"
+to test how many frames your video card is putting out
+glxgears -info
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 install vim
 
@@ -380,6 +452,7 @@ htop - interactive process viewer
 gimp - graphical editor
 wakeonlan - turn on devices on local network
 qbittorrent - fast bittorent clients
+python3-pip - package manager for python
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 mousepad
 
