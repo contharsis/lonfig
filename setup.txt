@@ -236,6 +236,11 @@ Background
 Style, pick "None"
 Color, pick "Solid color"
 set color box to black
+Menus
+Desktop Menu
+uncheck "Show application icons in menu"
+Window List Menu
+uncheck "Show application icons in menu"
 Icons
 Default Icons
 uncheck everything
@@ -450,9 +455,11 @@ inxi - system information script
 redshift - display color temperature adjuster
 htop - interactive process viewer
 gimp - graphical editor
+vlc - media player
 wakeonlan - turn on devices on local network
 qbittorrent - fast bittorent clients
 python3-pip - package manager for python
+software-properties-common - manage the repositories that you install software from
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 mousepad
 
