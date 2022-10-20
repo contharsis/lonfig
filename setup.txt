@@ -967,4 +967,31 @@ firefox keeps crashing tabs, mainly noticed in youtube
 right-click on toolbar, Customize Toolbar
 uncheck "Title Bar"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+usb device doesn't show in windows 10 in virtual box
+
+make sure the drive is ntfs formatted, don't mount it in the host system
+format the drive
+sudo fdisk /dev/sda
+d, untill there are no partitions
+g
+w
+sudo fdisk /dev/sda
+n
+t
+11, for ntfs partition type
+w
+sudo mkfs.ntfs /dev/sda1
+
+whoami, that is your username
+sudo usermod -aG vboxusers <username>
+sudo reboot
+Super
+VirtualBox
+Settings
+USB
+USB Device Filters
+second icon on right is the one to add one usb device
+you can also click the first one to add a filter that enables all usb devices
+to be used inside the virtual machine
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
