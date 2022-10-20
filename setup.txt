@@ -645,6 +645,21 @@ add "contrib non-free", so it looks like this
 "deb-src http://deb.debian.org/debian/ bullseye main contrib non-free"
 sudo apt update
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+change default kernel in grub
+
+grep submenu /boot/grub/grub.cfg
+copy the value of $menuentry_id_option,
+it looks like "gnulinux-advanced-<numbers, letters and dashes>", i will name it like advanced_menu
+grep gnulinux /boot/grub/grub.cfg
+copy the value of $menuentry_id_option,
+it looks like "gnulinux-<kernel version>-amd64-advanced-<numbers, letters and dashes>", i will name it like kernel_version
+
+sudo vim /etc/default/grub
+set GRUB_DEFAULT="advanced_menu>kernel_version"
+so it looks like GRUB_DEFAULT="gnulinux-advanced-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc>gnulinux-5.10.0-18-amd64-advanced-swa21lei-de1f-33q0-0965-1pw21a85ea22"
+sudo update-grub
+sudo reboot
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 create desktop and search entries for programs
 
 after you install a program, my program is Postman
@@ -869,7 +884,7 @@ Super
 VirtualBox
 New
 Name, set to "windows"
-Version, set to "WIndows 10 (64-bit)"
+Version, set to "Windows 10 (64-bit)"
 if you have more memory, set to 4096
 pick "Create a virtual hard disk now"
 pick "VDI (VirtualBox Disk Image)"
@@ -885,6 +900,7 @@ click on Empty drive, Optical Drive should be "SATA Port 1"
 click disk button next to it
 pick "Choose a disk file..."
 pick windows 10 iso
+start virtual machine, install windows 10
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
 bugs
