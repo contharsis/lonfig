@@ -799,6 +799,10 @@ chmod +x winetricks
 ./winetricks
 download what you need
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+disable pc speaker
+
+sudo vim /etc/modprobe.d/pcspkr.conf, add "blacklist pcspkr"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 enable wakeonlan
 
 remote machine
