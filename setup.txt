@@ -998,4 +998,13 @@ second icon on right is the one to add one usb device
 you can also click the first one to add a filter that enables all usb devices
 to be used inside the virtual machine
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+if you are getting certificate errors
+"ERROR: The certificate of <url> (is not trusted / hasn't got a known issuer)."
+
+sudo apt install ca-certificates
+
+or
+
+when using wget, add flag --no-check-certificate
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
