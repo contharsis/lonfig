@@ -195,26 +195,26 @@ edit system
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 edit window manager
 
-change program search shortcut
+change application finder shortcut
 alt + f3
 Keyboard
 Application Shortcuts
-double-click xfce4-appfinder, set to "super l"
+double-click "xfce4-appfinder", set to "super l"
 
 edit firefox launch shortcut
-double-click exo-open --launch WebBrowser, one with "WWW" as shortcut, set to "alt + a"
+double-click "exo-open --launch WebBrowser", the one with "WWW" as shortcut, set to "alt + a"
 
 edit thunar launch shortcut
-double-click thunar shortcut, one with "super + e" as shortcut, set to "alt + e"
+double-click "thunar", one with "super + e" as shortcut, set to "alt + e"
 
 edit terminal launch shortcut
-double-click exo-open --launch TerminalEmulator, set to "alt + d"
+double-click "exo-open --launch TerminalEmulator", set to "alt + d"
 
 add mousepad launch shortuct
 click "Add", set "Command" to "mousepad", click "OK", set to "alt + w"
 
 edit session logout shortcut
-double-click xfce4-session-logout shortcut, set to "alt + x"
+double-click "xfce4-session-logout", set to "alt + x"
 
 Layout
 click "Add", add your language
@@ -244,6 +244,13 @@ Window Manager Tweaks
 Cycling, uncheck "Draw frame around selected window while cycling"
 Placement, "Minimum size of windows to trigger smart placement" set to "Large"
 Compositor, uncheck "Show windows preview in place of icons when cycling", "Show shadows under dock windows", "Show shadows under regular windows"
+
+disable workspaces
+super
+Workspaces
+General
+Layout
+"Number of workspaces", set to 1
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 edit desktop environment
 
@@ -304,7 +311,7 @@ edit default applications
 super
 Default Applications
 Others
-"text/plain", pick "Mousepad"
+"text/plain", "application/x-shellscript", pick "Mousepad"
 "image/gif", "image/jpeg", "image/png", pick "Ristretto Image Viewer
 
 disable program reloading from last session
@@ -340,16 +347,11 @@ Appearance
 check "Show flat buttons"
 uncheck "Show handle"
 Behaviour, "Middle click action", pick "Close Window"
-click "Workspace Switcher", click "Remove", click "Remove"
-click "Separator" between "Separator" and "Status Tray Plugin", click "Remove", click "Remove" 
-if you are not on battery, click "Power Manager Plugin", click "Remove", click "Remove"
-click "Notification Plugin", click "Remove", click "Remove"
-click Separator between "PulseAudio Plugin" and "Clock", click "Remove", click "Remove"
 double-click "Clock"
 Time Settings
 Timezone, set your timezone
-click "Separator" between "Clock" and "Action Buttons", click "Remove", click "Remove"
-click Action Buttons, click "Remove", click "Remove"
+click "Workspace Switcher", "Notification Plugin", "Action Buttons", click "Remove", click "Remove"
+if you are not on battery, click "Power Manager Plugin", click "Remove", click "Remove"
 
 remove "Mail Reader" from "Applications Menu"
 sudo vim /etc/xdg/menus/xfce-applications.menu
@@ -673,8 +675,8 @@ Categories=Development;REST
 "
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 java
+https://www.oracle.com/java/technologies/downloads
 
-go to https://www.oracle.com/java/technologies/downloads
 download latest version java with product/file description as "x64 Debian Package"
 cd ~/Downloads
 sudo apt-get install ./jdk-<version>_linux-x64_bin.deb
@@ -696,7 +698,7 @@ cd ~/Downloads
 sudo mv jdk-8u341-linux-x64.tar.gz /usr/lib/jvm
 sudo tar -xzvf jdk-8u341-linux-x64.tar.gz
 sudo rm jdk-8u341-linux-x64.tar.gz
-create link which uses a jdk
+create link which uses the jdk
 sudo ln -s /usr/lib/jvm/<jdk>/bin/java /usr/bin/java<jdk version>
 everytime you want to use that jdks environment, change JAVA_HOME variable to that jdk
 export JAVA_HOME="/usr/lib/jvm/<jdk>"
