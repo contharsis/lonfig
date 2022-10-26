@@ -6,84 +6,93 @@ download
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 desktop environment
 
-link - https://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/current-live/amd64/iso-hybrid
 named "debian-live-<version>-amd64-xfce+nonfree.iso"
+https://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/current-live/amd64/iso-hybrid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 server (headless)
 
-link - https://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/current-live/amd64/iso-hybrid
 named "debian-live-<version>-amd64-standard+nonfree.iso"
+https://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/current-live/amd64/iso-hybrid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
 setup
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-put flash drive in computer, my flash drive is on /dev/sda
+create bootable usb
 
-sudo umount /dev/sda<1, 2, 3, etc.>, for each mounted partition
+put usb in computer
+~~~~~~~~~~~~~~~~
+linux
+
+lsblk
+sudo umount /dev/sda?*
 cd ~/Downloads
 sudo fdisk /dev/sda
-d, press until you delete all partitons
-o
-w
-sudo dd if=<linux iso> of=/dev/sda bs=4M status=progress
+delete all partitions, create new gpt partition table, write and exit
+sudo dd if=linux.iso of=/dev/sda bs=4M status=progress  
+~~~~~~~~~~~~~~~~
+windows
 
-after the writing process is done, restart PC, boot from flash drive, install debian,
-after restart if you boot into flash drive again, check if boot order is correct in bios  
+download rufus - https://rufus.ie/
+open it
+"Device", pick the usb
+"Boot selection", pick the linux.iso file
+click "Start"
+~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 change session
 
-on first boot, while in login,
-click first top right icon, pick "Xfce Session"
+while in login menu, click first top right icon, pick "Xfce Session"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 add user to sudoers
 
-whoami, that is your username
+whoami
 su
 sudo visudo
-under "root ALL=(ALL:ALL) ALL",
-add new line
-"<username> ALL=(ALL:ALL) ALL"
+under "root ALL=(ALL:ALL) ALL" add "<username> ALL=(ALL:ALL) ALL"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 remove flash drive
 
-lsblk, locate your flash drive, mine is on /dev/sda
+lsblk
 sudo eject /dev/sda
 physically remove the flash drive
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-update system
+enable contrib and non-free repositories, add 32-bit support and update system
 
+sudo apt install vim
+sudo vim /etc/apt/sources.list
+add "contrib non-free" after "deb http://deb.debian.org/debian/ bullseye main" and "deb-src http://deb.debian.org/debian/ bullseye main"
+it should be like this
+"
+deb http://deb.debian.org/debian/ bullseye main contrib non-free
+deb-src http://deb.debian.org/debian/ bullseye main contrib non-free
+"
+
+sudo dpkg --add-architecture i386
 sudo apt update
 sudo apt upgrade
 sudo apt autoremove
-sudo update-initramfs -uvk all
-sudo reboot
-
-enable bash completion
-sudo apt install bash-completion
 sudo reboot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-install drivers
+graphic drivers
 
-for graphics driver https://wiki.debian.org/GraphicsCard
-enable contrib and non-free repos, look down in extra features
-sudo apt update
+https://wiki.debian.org/GraphicsCard
+~~~~~~~~~~~~~~~~
+amd
+https://wiki.debian.org/AtiHowTo
 
-if you are on amd https://wiki.debian.org/AtiHowTo
-identify you are on amd
-lspci -nn | grep VGA
-part of the output should look something like this
-"01:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Barts PRO [Radeon HD 6850] [1002:6739]"
-sudo apt install firmware-amd-graphics libgl1-mesa-dri libglx-mesa0 mesa-vulkan-drivers xserver-xorg-video-all
+lspci -nn | egrep -i "3d|display|vga"
+some output should be similar to "01:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Barts PRO [Radeon HD 6850] [1002:6739]"
+sudo apt install firmware-amd-graphics libgl1-mesa-dri libglx-mesa0 mesa-vulkan-drivers xserver-xorg-video-all libglx-mesa0:i386 mesa-vulkan-drivers:i386 libgl1-mesa-dri:i386
 sudo reboot
-sudo dpkg --add-architecture i386
-sudo apt update
-sudo apt install libglx-mesa0:i386 mesa-vulkan-drivers:i386 libgl1-mesa-dri:i386
-performance check
+
+usage check
 sudo apt install radeontop
-manage your gpu fans
+sudo radeontop
+
+manage gpu fans
 sudo pip3 install amdgpu-fan
-sudo vim /etc/amdgpu-fan.yml, add to file
+sudo vim /etc/amdgpu-fan.yml, add
 "
 speed_matrix:  # -[temp(*C), speed(0-100%)]
 - [0, 0]
@@ -92,7 +101,9 @@ speed_matrix:  # -[temp(*C), speed(0-100%)]
 - [70, 70]
 - [90, 100]
 "
-sudo vim /etc/systemd/system/amdgpu-fan.service, add to file
+
+sudo vim /etc/systemd/system/amdgpu-fan.service
+add
 "
 [Unit]
 Description=Service for controling amdgpu fan.
@@ -107,46 +118,49 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 "
+
 sudo systemctl daemon-reload
 sudo systemctl enable amdgpu-fan.service
 sudo reboot
+~~~~~~~~~~~~~~~~
+nvidia
+https://wiki.debian.org/NvidiaGraphicsDrivers
 
-if you are on nvidia https://wiki.debian.org/NvidiaGraphicsDrivers
-identify you are on nvidia
 lspci -nn | egrep -i "3d|display|vga"
-part of the output should look something like this
-"07:00.0 VGA compatible controller [0300]: NVIDIA Corporation GM206 [GeForce GTX 960] [10de:1401] (rev a1)"
-sudo apt install linux-headers-amd64
-sudo apt install nvidia-driver firmware-misc-nonfree
+some output should be similar to "07:00.0 VGA compatible controller [0300]: NVIDIA Corporation GM206 [GeForce GTX 960] [10de:1401] (rev a1)"
+sudo apt install linux-headers-amd64 nvidia-driver firmware-misc-nonfree nvidia-driver-libs:i386
 sudo reboot
-enable 32-bit support
-sudo dpkg --add-architecture i386
-sudo apt update
-sudo apt install nvidia-driver-libs:i386
 
-if you want to detect gpu
+detect gpu and list gpu drivers
 sudo apt install nvidia-detect
+nvidia-detect
 
-test performance with mesa https://wiki.debian.org/Mesa#Testingperformance
+gpu info
+sudo apt install nvidia-smi
+nvidia-smi
+~~~~~~~~~~~~~~~~
+mesa-utils
+https://wiki.debian.org/Mesa#Testingperformance
+
 sudo apt install mesa-utils
+
 check your gpu
 glxinfo | grep OpenGL
-output should look similar to this
+some output should be similar to
 "
 OpenGL vendor string: Intel Open Source Technology Center # The manufacturer
 OpenGL renderer string: Mesa DRI Intel(R) Haswell Desktop  # The type of the chip
 OpenGL core profile version string: 3.3 (Core Profile) Mesa 10.3.2 # The OpenGL version fully supported, here 3.3 thanks to Mesa 10.3.2 .
 OpenGL core profile shading language version string: 3.30 # The GLSL version fully supported
 "
+
 glxinfo  | grep rendering
 output should be
 "direct rendering: Yes"
+
 to test how many frames your video card is putting out
 glxgears -info
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-install vim
-
-sudo apt install vim
+~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 check if any processes failed
 
@@ -160,34 +174,23 @@ systemctl is-system-running
 output should be
 "running"
 
-if there are active / sub failed, fix them, check bugs
+if there are active / sub failed, check bugs section, fix them, 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 add devices to fstab
 
-lsblk, find your device, mine is /dev/sda
-to format device
-sudo fdisk /dev/sda
-g
-w
-have atleast one partition, to make a partition
-sudo fdisk /dev/sda
-n
-press enter as much as needed
-w
-make file system on partition, my file system type is ext4 and partition is /dev/sda1
+lsblk
+sudo fdisk /dev/sda, create new gpt partition table, create new partition save and exit
 sudo mkfs.ext4 /dev/sda1
 
-sudo blkid, remember uuid of partition
-i will mount it to /mnt/storage, so I need to make this directory
+sudo blkid
 sudo mkdir /mnt/storage
 sudo vim /etc/fstab
-add to end of file
-"UUID=<uuid of partition> <mount point, like /mnt/storage> <type of device, mine is ext4> defaults 0 2"
+add to end of file, "UUID=<uuid of partition, /dev/sda1> <mount point, /mnt/storage> <type of device, ext4> defaults 0 2"
 sudo systemctl daemon-reload
 sudo reboot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
-system
+edit system
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 edit window manager
@@ -196,69 +199,91 @@ change program search shortcut
 alt + f3
 Keyboard
 Application Shortcuts
-double-click xfce4-appfinder shortcut, set to Super L
+double-click xfce4-appfinder, set to "super l"
 
-change firefox launch shortcut
-double-click exo-open --launch WebBrowser shortcut
-one with WWWW as shortcut, set to alt + a
+edit firefox launch shortcut
+double-click exo-open --launch WebBrowser, one with "WWW" as shortcut, set to "alt + a"
 
-change file explorer launch shortcut
-double-click thunar shortcut, one with ctrl + alt + f as shortcut, set to alt + e
+edit thunar launch shortcut
+double-click thunar shortcut, one with "super + e" as shortcut, set to "alt + e"
 
-change terminal launch shortcut
-double-click exo-open --launch TerminalEmulator shortcut, set to alt + d
+edit terminal launch shortcut
+double-click exo-open --launch TerminalEmulator, set to "alt + d"
 
 add mousepad launch shortuct
-click "Add", set "Command" to "mousepad", click "OK", set shortcut to alt + w
+click "Add", set "Command" to "mousepad", click "OK", set to "alt + w"
 
-change session logout shortcut
-double-click xfce4-session-logout shortcut, set to alt + x
+edit session logout shortcut
+double-click xfce4-session-logout shortcut, set to "alt + x"
 
 Layout
 click "Add", add your language
-Change layout option, pick key combination to change your language
-check "Use system defaults", then uncheck it
+Change layout option, pick combination to change your language
+check "Use system defaults" then uncheck it
 
-change desktop environment to dark theme
-Super
+remove title bar and borders from windows
+sudo mkdir -p /usr/share/themes/Null/xfwm4
+sudo touch /usr/share/themes/Null/xfwm4/themerc
+super
+Window Manager
+Style, Theme, pick "Null"
+
+change window closing shortcut
+Keyboard
+double-click "Close window", set to "alt + q"
+
+change toggle fullscreen shortcut
+double-click "Maximize window", set to "alt + f"
+
+change hide window shortcut
+double-click "Hide window", set to "alt + z"
+
+disable frame around selected windows and center all windows
+super
+Window Manager Tweaks
+Cycling, uncheck "Draw frame around selected window while cycling"
+Placement, "Minimum size of windows to trigger smart placement" set to "Large"
+Compositor, uncheck "Show windows preview in place of icons when cycling", "Show shadows under dock windows", "Show shadows under regular windows"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+edit desktop environment
+
+edit appearance
+super
 Appearance
-Style
-pick "Adwaita-dark"
-Icons
-pick "Adwaita - The Only One"
-Settings
-uncheck "Show images on buttons"
-uncheck "Show images in menus"
+Style, pick "Adwaita-dark"
+Icons, pick "Adwaita - The Only One"
+Settings, uncheck "Show images on buttons", "Show images in menus"
 
-Super
+edit desktop and icons
+super
 Desktop
 Background
 Style, pick "None"
 Color, pick "Solid color"
-set color box to black
+click color box, pick the color black from bottom right, click "Select"
 Menus
-Desktop Menu
-uncheck "Show application icons in menu"
-Window List Menu
-uncheck "Show application icons in menu"
+Desktop Menu, uncheck "Show application icons in menu"
+Window List Menu, uncheck "Show application icons in menu"
 Icons
+check "Show icons on primary display"
 Default Icons
 uncheck everything
 
-Alt + E
+edit background of grub
+alt + e
 take picture of folder background
 sudo apt install gimp
 Super
 GNU Image Manipulation Program
 create black image, name it black.png, create new empty image and paste the folder background image
-copy the color and create new image with that color, usually named gray.png
+copy the color and create new image with that color named gray.png
 save black.png and gray.png, export them to ~/Desktop
 sudo mv ~/Desktop/black.png ~/Desktop/gray.png /usr/share/pixmaps
 sudo vim /etc/default/grub
-remove "splash" from GRUB_CMDLINE_LINUX_DEFAULT
+remove "splash" from "GRUB_CMDLINE_LINUX_DEFAULT"
 if you have only one operating system
-set GRUB_TIMEOUT to 0
-add to end of file
+set "GRUB_TIMEOUT" to 0
+add
 "
 # Splash background
 GRUB_BACKGROUND=/usr/share/pixmaps/black.png
@@ -266,113 +291,75 @@ GRUB_BACKGROUND=/usr/share/pixmaps/black.png
 sudo update-grub
 sudo reboot
 
+edit background and login default picture of login
 sudo vim /usr/share/lightdm/lightdm-gtk-greeter.conf.d/01_debian.conf
-set background to #000000
-set theme-name to Adwaita-dark
-after theme-name
+set "background" to #000000
+set "theme-name" to Adwaita-dark
 if you want you can add default user image,
-after theme-name, add new line
-default-user-image=<path to image>
+add "default-user-image=<path to image>"
 if you want to remove it
 default-user-image=/usr/share/pixmaps/gray.png
 
-remove title bar and borders from windows
-sudo mkdir -p /usr/share/themes/Null/xfwm4
-sudo touch /usr/share/themes/Null/xfwm4/themerc
-Super
-Window Manager
-Style
-Theme, pick "Null"
+edit default applications
+super
+Default Applications
+Others
+"text/plain", pick "Mousepad"
+"image/gif", "image/jpeg", "image/png", pick "Ristretto Image Viewer
 
-change window closing shortcut
-Keyboard
-double-click "Close window" shortcut, set to alt + q
-
-change toggle fullscreen shortcut
-double-click "Maximize window", set to alt + f
-
-change hide window shortcut
-double-click "Hide window", set to alt + z
-
-disable frame around selected windows and center all windows
-Super
-Window Manager Tweaks
-Cycling
-uncheck "Draw frame around selected window while cycling"
-Placement
-Minimum size of windows to trigger smart placement, pick max, Large
-Compositor
-uncheck "Show shadows under dock windows"
-uncheck "Show shadows under regular windows"
-
-alt + e
-View
-uncheck "Menubar"
-click <username> on side pane
-right-click "Downloads"
-Send To, pick "Side Pane (Create Shortcut)"
-
+disable program reloading from last session
 close all programs
-go to desktop
 alt + q
 uncheck "Save session for future logins"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 edit panels
 
 hide IBus icon
-Super
+super
 IBus Preferences
-General
-Font and Style
-uncheck "Show icon on system tray"
+General, Font and Style, uncheck "Show icon on system tray"
 
 delete panel 2
-Super
+super
 Panel
-Panel 2
-click minus next to "Panel 2"
+Panel 2, click minus next to "Panel 2", click "Remove"
 
 edit panel 1
 Panel 1
 Display
 General
-uncheck "Lock panel"
-move panel to bottom
-check "Lock panel"
-Automatically hide the panel, pick "Always"
-Measurements
-Row size (pixels), set to 16
-
-edit items
+"Output", pick "Primary"
+uncheck "Lock panel", move panel to bottom, check "Lock panel"
+"Automatically hide the panel", pick "Always"
+Measurements, "Row size (pixels)", set to 16
 Items
-double-click Applications Menu
-uncheck "Show button title"
-double-click Window Buttons
+double-click "Applications Menu"
+Appearance, uncheck "Show icons in menu", "Show button title"
+double-click "Window Buttons"
 Appearance
+check "Show flat buttons"
 uncheck "Show handle"
-Behaviour
-Middle click action, pick "Close Window"
-click Workspace Switcher, click "Remove"
-click Separator between Separator and Status Tray Plugin, click "Remove" 
-if you are on desktop computer, click Power Manager Plugin, click "Remove"
-click Notification Plugin, click "Remove"
-click Separator between PulseAudio Plugin and Clock, click "Remove"
-double-click Clock
+Behaviour, "Middle click action", pick "Close Window"
+click "Workspace Switcher", click "Remove", click "Remove"
+click "Separator" between "Separator" and "Status Tray Plugin", click "Remove", click "Remove" 
+if you are not on battery, click "Power Manager Plugin", click "Remove", click "Remove"
+click "Notification Plugin", click "Remove", click "Remove"
+click Separator between "PulseAudio Plugin" and "Clock", click "Remove", click "Remove"
+double-click "Clock"
 Time Settings
 Timezone, set your timezone
-click Separator between Clock and Action Buttons, click "Remove"
-click Action Buttons, click "Remove"
-click "Add", pick "Show Desktop", click "Add"
+click "Separator" between "Clock" and "Action Buttons", click "Remove", click "Remove"
+click Action Buttons, click "Remove", click "Remove"
 
-remove "Mail Reader" from Applications Menu
+remove "Mail Reader" from "Applications Menu"
 sudo vim /etc/xdg/menus/xfce-applications.menu
-after these lines
+after
 "
 <Include>
      <Category>X-Xfce-Toplevel</Category>
 </Include>
 "
-add new lines
+add
 "
 <Exclude>
      <Filename>xfce4-mail-reader.desktop</Filename>
@@ -380,164 +367,79 @@ add new lines
 "
 remove all "<Separator/>" tags
 
+edit sound
 go to desktop
 click on sound plugin on taskbar
-set everything to 100%, not to max but tp where the white line is under the main line
+set everything to 100%
 
 edit notification
-Super
+super
 Notifications
 General
-Appearance
-Opacity, set to "100%"
-Animations
-uncheck "Fade out"
+Appearancem, "Opacity", set to "100%"
+Animations, uncheck "Fade out"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-turn off sleep and brightness reduction
+edit display
 
-Super
+super
+Display
+General
+arrange displays as necessary
+check "Primary Display" for the main display
+click "Keep this configuration"
+pick max value for "Refresh rate" for all displays
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+turn off sleep
+
+super
 Power Manager
 Display
-for On battery and Plugged in if you are on a portable computer
-pick "Never" for all from Display power management
-
-Brightness reduction
-On inactivity reduce to, pick "100%"
+uncheck "Display power management"
+set "Blank after" to "Never"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 terminal
 
-Super
-Terminal Emulator
+alt + d
 Edit
 Preferences...
 General
 Scrolling
-Scrollbar is, pick "Disabled"
+"Scrollbar is", pick "Disabled"
 check "Unlimited scrollback"
-Cursor
-Cursor shape, pick "Underline"
-Clipboard
-uncheck "Show unsafe paste dialog"
+Cursor, "Cursor shape", pick "Underline"
+Clipboard, uncheck "Show unsafe paste dialog"
 Appearance, uncheck "Display menubar in new windows"
-
-create multiple tabs in one terminal
+ctrl + shift + t
 alt + q
-check "Do not ask me again"
-click "Close Window"
+check "Do not ask me again", click "Close Window"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--------------------------------------------------------------------------
-programs
+thunar
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-edit default programs
-
-Super
-Default Applications
-Others
-for text/plain
-click on column "Default Application", pick "Mousepad"
-for image/gif, image/jpeg, image/png
-click on column "Default Application", pick "Ristretto Image Viewer"
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-tools
-
-install with
-sudo apt install <tool>
-vim - text editor
-git - content tracker
-openssh-client - ssh client
-openssh-server - ssh server
-unar - operate with .rar files
-pmount - automatic mount as user
-curl - transfer a URL
-wget - non-interactive network downloader
-inxi - system information script
-redshift - display color temperature adjuster
-htop - interactive process viewer
-gimp - graphical editor
-vlc - media player
-wakeonlan - turn on devices on local network
-qbittorrent - fast bittorent clients
-python3-pip - package manager for python
-software-properties-common - manage the repositories that you install software from
+alt + e
+View
+uncheck "Menubar"
+click <username> on side pane
+right-click "Downloads"
+pick "Send To", pick "Side Pane (Create Shortcut)"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 mousepad
 
-Super
+super
 Mousepad
 Edit
 Preferences
 Window
-General
-uncheck "Remember window state"
+General, uncheck "Remember window state"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ristretto image viewer
 
-Super
+super
 Ristretto Image Viewer
-View, uncheck "Show Thumbnail Bar"
 Edit
 Preferences...
 Behaviour
-uncheck "Maximize window on startup when opening an image"
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-redshift
-
-mkdir -p ~/.config/systemd/user
-vim ~/.config/systemd/user/redshift.service
-add to file
-"
-[Unit]
-Description=Display color temperature adjuster
-After=graphical.target
-
-[Service]
-ExecStart=/usr/bin/redshift -t <day>:<night> -r -l <latitude>:<longitude> -m randr
-Restart=always
-
-[Install]
-WantedBy=default.target
-"
-day is your daily temperature, night is your nightly temperature
-latitude is the latitude of your location and longitude is the longitude of your location,
-they can also be floating point numbers
-systemctl --user daemon-reload
-systemctl --user enable redshift.service
-sudo reboot
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-qbittorrent
-
-setup dark theme
-download from https://gitlab.com/qbittorrent-black-theme/client
-cd ~/Downloads
-git clone https://gitlab.com/qbittorrent-black-theme/client.git
-for the theme to stay in qbittorrent, you mustn't move or delete black.qbtheme after you set it in qbittorrent,
-so put the file somewhere in configuration files, for example ~/.config/qbittorrent_theme
-mkdir ~/.config/qbittorrent_theme
-cp client/black.qbtheme ~/.config/qbittorrent_theme
-
-set theme
-whoami, that is your username
-Super
-qBittorrent
-Tools
-Preferences
-Behavior
-Interface
-Use custom UI Theme
-UI Theme file, click folder icon, set it to "/home/<username>/.config/qbittorrent_theme/black.qbtheme"
-change tray icon to dark theme
-Desktop
-Tray icon style, pick "Monochrome (for dark theme)"
-
-change torrent folder
-mkdir ~/torrents
-Tools
-Preferences...
-Downloads
-Saving Management
-Default Save Path, set to /home/<username>/torrents
-restart qbittorrent
+Startup, uncheck "Maximize window on startup when opening an image"
+View, uncheck "Show Thumbnail Bar"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 firefox
 
@@ -568,11 +470,11 @@ Logins and Passwords
 uncheck "Ask to save logins and passwords for websites"
 
 History
-Firefox will, pick "Use custom settings for history"
+"Firefox will", pick "Use custom settings for history"
 uncheck "Remember browsing and download history"
 uncheck "Remember search and form history"
 check "Clear history when Firefox closes"
-click Settings...
+click "Settings..."
 uncheck "Cookies"
 check "Offline website data"
 click "OK"
@@ -580,10 +482,10 @@ click "OK"
 Address Bar
 uncheck everything
 
-go to about:config
+about:config
 uncheck "Warn me when I attempt to access these preferences"
 click "Accept the Risk and Continue"
-browser.compactmode.show set to true by double-clicking
+"browser.compactmode.show", set to "true"
 right-click toolbar
 Customize Toolbar...
 Density, pick "Compact (not supported)"
@@ -593,20 +495,19 @@ edit bookmarks
 open new tab, right-click on bookmark toolbar, click "Manage Bookmarks"
 Bookmarks Toolbar, delete "Getting Started"
 Bookmarks Menu, delete Mozilla Firefox folder
-bookmark sites by going to them and clicking the star at the end of the search bar
 
 add extensions
 search extensions firefox in the search engine or go to https://addons.mozilla.org/en-US/firefox
 add extensions, for each click Add, then check "Allow this extension to run in Private Windows", then click "Okay":
 
 uBlock Origin - efficient wide-spectrum content blocker
-link - https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/
+https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/
 
 Dark Reader - dark mode for every website
-link - https://addons.mozilla.org/en-US/firefox/addon/darkreader/
+https://addons.mozilla.org/en-US/firefox/addon/darkreader/
 
 Unhook - Hide Youtube sections
-link - https://addons.mozilla.org/en-US/firefox/addon/youtube-recommended-videos/
+https://addons.mozilla.org/en-US/firefox/addon/youtube-recommended-videos/
 open it, change to dark mode and turn it on with top right buttons
 uncheck "Hide Playlist"
 check "Hide Mixes"
@@ -616,54 +517,147 @@ check "Trending"
 check "Hide Shorts Tab"
 
 Video Resumer - Resumes Youtube videos from where you played them last
-link - https://addons.mozilla.org/en-US/firefox/addon/video-resumer/
+https://addons.mozilla.org/en-US/firefox/addon/video-resumer/
 open Settings
 Extensions & Themes
 Extensions
 click "Video Resumer"
 Preferences
-Do not memorize position if only this many seconds left on the video, set to 1
-Forget videos older than this many days, set to 365
+"Do not memorize position if only this many seconds left on the video", set to 1
+"Forget videos older than this many days", set to 365
 
 MuteLinks - Mute tabs based on URL
-link - https://addons.mozilla.org/en-US/firefox/addon/mutelinks/
+https://addons.mozilla.org/en-US/firefox/addon/mutelinks/
 when you have opened the tab you want to mute, right-click on it
 hover "Mutelinks"
 click "Add/edit entry to Blacklist", you can remove quotes if you want, click "Add to Blacklist"
+
+Privacy & Security
+Cookies and Site Data
+click "Clear Data..."
+click "Clear"
+
+History
+click "CLear History..."
+Clear All History
+"Time range to clear", pick "Everything"
+check "Site settings", "Offline website data"
+click "OK"
+
+https://google.com/
+login to your account
+Settings
+Search settings
+Languages, pick "English", click "Save"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------------------------------------------
+programs
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tools
+
+install with
+sudo apt install <tool>
+
+bash-completion - extend bash's standard completion behavior
+vim - text editor
+git - content tracker
+openssh-client - ssh client
+openssh-server - ssh server
+unar - operate with .rar files
+pmount - automatic mount as user
+curl - transfer a URL
+wget - non-interactive network downloader
+inxi - system information script
+redshift - display color temperature adjuster
+htop - interactive process viewer
+gimp - graphical editor
+vlc - media player
+wakeonlan - turn on devices on local network
+qbittorrent - fast bittorent clients
+python3-pip - package manager for python
+software-properties-common - manage the repositories that you install software from
+ca-certificates - certificate authorities for mozilla browser
+build-essential - c/c++ build tools
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+redshift
+
+mkdir -p ~/.config/systemd/user
+vim ~/.config/systemd/user/redshift.service
+add to file
+"
+[Unit]
+Description=Display color temperature adjuster
+After=graphical.target
+
+[Service]
+ExecStart=/usr/bin/redshift -t <day>:<night> -r -l <latitude>:<longitude> -m randr
+Restart=always
+
+[Install]
+WantedBy=default.target
+"
+day is your daily temperature, night is your nightly temperature
+latitude is the latitude of your location and longitude is the longitude of your location,
+they can also be floating point numbers
+systemctl --user daemon-reload
+systemctl --user enable redshift.service
+sudo reboot
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+qbittorrent
+
+change theme to dark
+download from https://gitlab.com/qbittorrent-black-theme/client
+cd ~/Downloads
+git clone https://gitlab.com/qbittorrent-black-theme/client.git
+for the theme to stay in qbittorrent, you mustn't move or delete black.qbtheme after you set it in qbittorrent,
+so put the file somewhere in configuration files, for example ~/.config/qbittorrent_theme
+mkdir ~/.config/qbittorrent_theme
+cp client/black.qbtheme ~/.config/qbittorrent_theme
+whoami
+super
+qBittorrent
+Tools
+Preferences
+Behavior
+Interface
+Use custom UI Theme
+"UI Theme file", click folder icon, set it to "/home/<username>/.config/qbittorrent_theme/black.qbtheme"
+
+change tray icon to dark theme
+Desktop
+"Tray icon style", pick "Monochrome (for dark theme)"
+
+change torrent folder
+mkdir ~/torrents
+Tools
+Preferences...
+Downloads
+Saving Management
+"Default Save Path", set to /home/<username>/torrents
+restart qbittorrent
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
 extra features
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-enable contrib and non-free repositories
+edit default kernel in grub
 
-sudo vim /etc/apt/sources.list
-after "deb http://deb.debian.org/debian/ bullseye main"
-and "deb-src http://deb.debian.org/debian/ bullseye main"
-add "contrib non-free", so it looks like this
-"deb http://deb.debian.org/debian/ bullseye main contrib non-free"
-"deb-src http://deb.debian.org/debian/ bullseye main contrib non-free"
-sudo apt update
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-change default kernel in grub
-
-grep submenu /boot/grub/grub.cfg
-copy the value of $menuentry_id_option,
-it looks like "gnulinux-advanced-<numbers, letters and dashes>", i will name it like advanced_menu
-grep gnulinux /boot/grub/grub.cfg
-copy the value of $menuentry_id_option,
-it looks like "gnulinux-<kernel version>-amd64-advanced-<numbers, letters and dashes>", i will name it like kernel_version
+grep submenu /boot/grub/grub.cfg, copy the value of $menuentry_id_option
+"gnulinux-advanced-<numbers, letters and dashes>", its name will be advanced_menu
+grep gnulinux /boot/grub/grub.cfg, copy the value of $menuentry_id_option
+"gnulinux-<kernel version>-amd64-advanced-<numbers, letters and dashes>", its name will be kernel_version
 
 sudo vim /etc/default/grub
 set GRUB_DEFAULT="advanced_menu>kernel_version"
-so it looks like GRUB_DEFAULT="gnulinux-advanced-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc>gnulinux-5.10.0-18-amd64-advanced-swa21lei-de1f-33q0-0965-1pw21a85ea22"
+it should be similar to "GRUB_DEFAULT="gnulinux-advanced-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc>gnulinux-5.10.0-18-amd64-advanced-swa21lei-de1f-33q0-0965-1pw21a85ea22""
 sudo update-grub
 sudo reboot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-create desktop and search entries for programs
+desktop and search entries for programs
 
-after you install a program, my program is Postman
-sudo vim /usr/share/applications/postman.desktop, add to it
+sudo vim /usr/share/applications/<program name>.desktop
+add
 "
 [Desktop Entry]
 Encoding=UTF-8
@@ -678,17 +672,13 @@ StartupNotify=false
 Categories=Development;REST
 "
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-install C/C++ tools
-
-sudo apt install build-essential
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-install java
+java
 
 go to https://www.oracle.com/java/technologies/downloads
-download latest version java with Product/file description as "x64 Debian Package"
+download latest version java with product/file description as "x64 Debian Package"
 cd ~/Downloads
 sudo apt-get install ./jdk-<version>_linux-x64_bin.deb
-find directory where your jdk installed, mine is /usr/lib/jvm/jdk-<version>
+find directory where your jdk installed
 vim ~/.bashrc, add to end of file
 "
 # Java
@@ -696,24 +686,18 @@ export JAVA_HOME="/usr/lib/jvm/jdk-<version>"
 export PATH="$JAVA_HOME/bin:$PATH"
 "
 
-if you need to have multiple jdks
+multiple jdks
 you will use the jdk installation folder "/usr/lib/jvm" to link the jdks with the environment
-if your jdk has deb package, it will install automatically there when you run sudo apt-get install ./<jdk debian package>
-if your jdk doesn't have deb package, download the "x64 Compressed Archive" version of the jdk
-and manually put it inside "/usr/lib/jvm" for example i will download jdk 8u341
+if your jdk has deb package, it will install automatically there when you run sudo apt-get install ./<jdk deb package>
+if your jdk doesn't have deb package, download the "x64 Compressed Archive" version of the jdk and manually put it inside "/usr/lib/jvm"
 
 after download
 cd ~/Downloads
 sudo mv jdk-8u341-linux-x64.tar.gz /usr/lib/jvm
 sudo tar -xzvf jdk-8u341-linux-x64.tar.gz
 sudo rm jdk-8u341-linux-x64.tar.gz
-
 create link which uses a jdk
 sudo ln -s /usr/lib/jvm/<jdk>/bin/java /usr/bin/java<jdk version>
-for example
-sudo ln -s /usr/lib/jvm/jdk-11/bin/java /usr/bin/java11
-now you can use java11 to run with java 11
-
 everytime you want to use that jdks environment, change JAVA_HOME variable to that jdk
 export JAVA_HOME="/usr/lib/jvm/<jdk>"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -722,9 +706,9 @@ github
 git config --global user.name <name>
 git config --global user.email <email>
 git config --global init.defaultBranch main
-if you want to configure only for the repository you're in use without --global
+configure only for the repository you're in use without --global
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-setup github authentication
+github authentication
 
 ssh key
 
@@ -777,9 +761,10 @@ Note, set it as the purpose of the token
 use a git command inside a repository, enter username, paste the token in password field
 the credentials will save in ~/.git-credentials in plain text
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-install wine
+wine
+https://wiki.winehq.org/Download
+https://wiki.winehq.org/Debian
 
-go to https://wiki.winehq.org/Download and click link for your distro, mine is debian 11 so https://wiki.winehq.org/Debian
 sudo dpkg --add-architecture i386
 sudo mkdir -pm755 /etc/apt/keyrings
 sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
@@ -787,83 +772,51 @@ sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/
 sudo apt update
 sudo apt install --install-recommends winehq-stable
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-get winetricks, https://wiki.winehq.org/Winetricks
+winetricks
+https://wiki.winehq.org/Winetricks
 
 install tools that are required to run winetricks
 sudo apt install cabextract, unzip, p7zip, curl, zenity
 alternatives are wget for curl, kdialog for zenity
 
-cd "${HOME}/Downloads"
+cd ~/Downloads
 wget  https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
 chmod +x winetricks
 ./winetricks
 download what you need
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-disable pc speaker
-
-sudo vim /etc/modprobe.d/pcspkr.conf, add "blacklist pcspkr"
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-enable wakeonlan
+wakeonlan
 
 remote machine
 go into bios and turn on "WakeOnLan"
-ip link show, find your network interface, mine is enp3s0
-find it's MAC address, mine is 00:25:22:e8:7d:ba
+ip link show, find your network interface, find its MAC address
 check if wakeonlan is enabled
 sudo apt install ethtool
 sudo ethtool enp3s0
-Supports Wake-on should have a "g"
-Wake-on should be "g"
-if they aren't, do
-sudo vim /etc/network/interfaces.d/setup, add to end of file
+"Supports Wake-on" should have a "g"
+"Wake-on" should be "g"
+otherwise
+sudo vim /etc/network/interfaces.d/setup
+add
 "ethernet-wol g"
 sudo reboot
 
 client
 sudo apt install wakeonlan
 wakeonlan 00:25:22:e8:7d:ba
-you can use lower or upper case letters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-install openrgb, https://openrgb.org
+openrgb
+https://openrgb.org
+https://openrgb.org/up_/up_/static/releases/release_0.7/openrgb_0.7_amd64_bullseye_6128731.deb
 
-go to https://openrgb.org and click link for your distro
-mine is debian 11 so https://openrgb.org/up_/up_/static/releases/release_0.7/openrgb_0.7_amd64_bullseye_6128731.deb
 cd ~/Downloads
 sudo apt-get install ./openrgb_0.7_amd64_bullseye_6128731.deb
 if you can't install it
 sudo add-apt-repository ppa:thopiekar/openrgb
 sudo apt update
 sudo apt install openrgb
-
-if you don't see ram in devices
-sudo vim /etc/default/grub
-add to GRUB_CMDLINE_LINUX_DEFAULT "acpi_enforce_resources=lax"
-sudo update-grub
-sudo reboot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-install games from lutris, for example diablo 3
-
-go to https://lutris.net/downloads and follow instructions for your distro, mine is debian 11
-echo "deb http://download.opensuse.org/repositories/home:/strycore/Debian_11/ ./" | sudo tee /etc/apt/sources.list.d/lutris.list
-wget -q https://download.opensuse.org/repositories/home:/strycore/Debian_11/Release.key -O- | sudo tee /etc/apt/trusted.gpg.d/lutris.asc -
-sudo apt update
-sudo apt install lutris
-Super
-Lutris
-click + in the top right corner, search Blizzard Battle.net,
-click it and follow the instructions
-when it has opened and fully loaded, cancel the installation and uncheck "Remove game files"
-open Battle net and install Diablo 3
-
-if it doesn't work, you can use older lutris install in backup, install it
-using sudo apt-get install ./<lutris package name>
-Super
-Lutris
-go to Lutris under Source
-Community Installers
-use the search, find your game and install it
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-installing windows and doing windows specific actions
+windows and doing windows specific actions
 for example creating a windows usb boot usb device or downloading media creation tool
 
 sudo vim /etc/apt/sources.list
@@ -884,16 +837,16 @@ sudo apt install virtualbox-ext-pack
 sudo apt install virtualbox-guest-x11
 
 download windows 10 iso
-Super
+super
 VirtualBox
 New
-Name, set to "windows"
-Version, set to "Windows 10 (64-bit)"
-if you have more memory, set to 4096
+"Name", set to "windows 10"
+"Version", pick to "Windows 10 (64-bit)"
+if you have more memory, set memory to 4096
 pick "Create a virtual hard disk now"
 pick "VDI (VirtualBox Disk Image)"
 pick "Dynamically allocated"
-if you don't have much storage reduce it, but not under 30 gigabytes
+you can reduce storage, but not under 30 gb
 Settings
 if you have a good cpu
 System
@@ -903,7 +856,7 @@ Storage
 click on Empty drive, Optical Drive should be "SATA Port 1"
 click disk button next to it
 pick "Choose a disk file..."
-pick windows 10 iso
+pick windows10.iso
 start virtual machine, install windows 10
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
@@ -941,7 +894,7 @@ casper-md5check.service failed
 sudo systemctl disable casper-md5check.service
 sudo reboot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if your Wi-Fi networks says "device not managed"
+wi-fi networks says "device not managed"
 
 sudo nano /etc/NetworkManager/NetworkManager.conf
 under "[ifupdown]", set managed to true
@@ -962,14 +915,33 @@ sudo apt-key del <last 8 characters of pub code together no space>
 if sources list is changed after sudo apt update / upgrade / autoremove
 sudo chattr +i /etc/apt/sources.list.d/<repo>.list
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if after wine install you don't have Open With Wine Windows Program Loader in applications launch menu
+after wine install you don't have Open With Wine Windows Program Loader in applications launch menu
 sudo ln -s /usr/share/doc/wine/examples/wine.desktop /usr/share/applications
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-(unproven) (for amd processors)
-firefox keeps crashing tabs, mainly noticed in youtube
+ram doesn't show in devices in openrgb
 
-right-click on toolbar, Customize Toolbar
-uncheck "Title Bar"
+sudo vim /etc/default/grub
+add to GRUB_CMDLINE_LINUX_DEFAULT "acpi_enforce_resources=lax"
+sudo update-grub
+sudo reboot
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+certificate errors
+"ERROR: The certificate of <url> is not trusted / hasn't got a known issuer."
+
+if your system time isn't valid
+
+sudo apt install ntpdate
+sudo ntpdate pool.ntp.org
+sudo hwclock --systohc --utc
+
+your hardware clock should be utc, and the system should adapt it's timezone to it
+
+if you have windows for dual booting (which causes the problem in the first place)
+add dword registry "RealTimeIsUniversal" set to 1 in "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" 
+
+otherwise
+sudo apt install ca-certificates
+or when using wget add flag --no-check-certificate
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 usb device doesn't show in windows 10 in virtual box
 
@@ -997,14 +969,5 @@ USB Device Filters
 second icon on right is the one to add one usb device
 you can also click the first one to add a filter that enables all usb devices
 to be used inside the virtual machine
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if you are getting certificate errors
-"ERROR: The certificate of <url> (is not trusted / hasn't got a known issuer)."
-
-sudo apt install ca-certificates
-
-or
-
-when using wget, add flag --no-check-certificate
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
