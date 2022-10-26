@@ -570,6 +570,7 @@ unar - operate with .rar files
 pmount - automatic mount as user
 curl - transfer a URL
 wget - non-interactive network downloader
+net-tools - configure network interfaces
 inxi - system information script
 redshift - display color temperature adjuster
 htop - interactive process viewer
@@ -639,40 +640,65 @@ Saving Management
 "Default Save Path", set to /home/<username>/torrents
 restart qbittorrent
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--------------------------------------------------------------------------
-extra features
+github
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-edit default kernel in grub
+git config --global init.defaultBranch main
+git config --global pull.rebase false
+use "git config" without "--global" to set config for the repository you are currently in
+set "git config user.name" and "git config user.email" for each repository independently
 
-grep submenu /boot/grub/grub.cfg, copy the value of $menuentry_id_option
-"gnulinux-advanced-<numbers, letters and dashes>", its name will be advanced_menu
-grep gnulinux /boot/grub/grub.cfg, copy the value of $menuentry_id_option
-"gnulinux-<kernel version>-amd64-advanced-<numbers, letters and dashes>", its name will be kernel_version
+authentication
 
-sudo vim /etc/default/grub
-set GRUB_DEFAULT="advanced_menu>kernel_version"
-it should be similar to "GRUB_DEFAULT="gnulinux-advanced-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc>gnulinux-5.10.0-18-amd64-advanced-swa21lei-de1f-33q0-0965-1pw21a85ea22""
-sudo update-grub
-sudo reboot
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-desktop and search entries for programs
+ssh key
 
-sudo vim /usr/share/applications/<program name>.desktop
-add
+cd ~/.ssh
+ssh-keygen -C <email>
+set the file in which to save the key to <github username>_rsa
+set passphrase to memorable password
+eval "$(ssh-agent -s)", check if ssh-agent process is running, otherwise start it
+for each ssh key / github account add this to end of file
+vim ~/.ssh/config
 "
-[Desktop Entry]
-Encoding=UTF-8
-Exec=/usr/local/lib/postman/Postman/Postman
-Icon=/usr/local/lib/Postman/app/icons/icon_128x128.png
-Type=Application
-Terminal=false
-Comment=API Testing Environment
-Name=Postman
-GenericName=postman-9.27.0
-StartupNotify=false
-Categories=Development;REST
+Host <github username>
+	User git
+	Hostname github.com
+	AddKeysToAgent yes
+	IdentitiesOnly yes
+	IdentityFile ~/.ssh/<github username>_rsa
 "
+https://github.com
+Settings
+SSH and GPG keys
+SSH keys, click "New SSH key"
+Title, set it as the purpose of the key
+Key type, pick "Authentication Key"
+cat ~/.ssh/<github username>_rsa.pub, copy the key
+Key, paste the public key in there
+click "Add SSH key"
+
+now everytime you boot up your PC and want to use that github account
+you will have to enter the passphrase for the key once, then it's stored in the ssh-agent
+to check the current stored fingerprints
+ssh-add -l
+to check the current stored public key parameters
+ssh-add -L
+
+to transfering keys from one machine to another, you need to transfer both and set
+their permission to 600 for the private and 644 for the public key
+chmod 600 <key name>
+chmod 644 <key name>.pub
+
+personal authentication token
+
+git config --global credential.helper store
+go to https://github.com
+Settings
+Developer settings
+Personal access tokens
+click "Generate new token"
+Note, set it as the purpose of the token
+use a git command inside a repository, enter username, paste the token in password field
+the credentials will save in ~/.git-credentials in plain text
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 java
 https://www.oracle.com/java/technologies/downloads
@@ -702,66 +728,6 @@ create link which uses the jdk
 sudo ln -s /usr/lib/jvm/<jdk>/bin/java /usr/bin/java<jdk version>
 everytime you want to use that jdks environment, change JAVA_HOME variable to that jdk
 export JAVA_HOME="/usr/lib/jvm/<jdk>"
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-github
-
-git config --global user.name <name>
-git config --global user.email <email>
-git config --global init.defaultBranch main
-configure only for the repository you're in use without --global
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-github authentication
-
-ssh key
-
-cd ~/.ssh
-ssh-keygen -C <email>
-set the file in which to save the key to <github username>_rsa
-set passphrase to memorable password
-eval "$(ssh-agent -s)", check if ssh-agent process is running, otherwise start it
-for each ssh key / github account add this to end of file
-vim ~/.ssh/config
-"
-Host <github username>
-	User git
-	Hostname github.com
-	AddKeysToAgent yes
-	IdentitiesOnly yes
-	IdentityFile ~/.ssh/<github username>_rsa
-"
-go to https://github.com
-Settings
-SSH and GPG keys
-SSH keys, click "New SSH key"
-Title, set it as the purpose of the key
-Key type, pick "Authentication Key"
-cat ~/.ssh/<github username>_rsa.pub, copy the key
-Key, paste the public key in there
-click "Add SSH key"
-
-now everytime you boot up your PC and want to use that github account
-you will have to enter the passphrase for the key once, then it's stored in the ssh-agent
-if you want to check the current stored fingerprints
-ssh-add -l
-if you want to check the current stored public key parameters
-ssh-add -L
-
-if you are transfering keys from one machine to another, you need to transfer both and set
-their permission to 600 for the private and 644 for the public key
-chmod 600 id_rsa
-chmod 644 id_rsa.pub
-
-personal authentication token
-
-git config --global credential.helper store
-go to https://github.com
-Settings
-Developer settings
-Personal access tokens
-click "Generate new token"
-Note, set it as the purpose of the token
-use a git command inside a repository, enter username, paste the token in password field
-the credentials will save in ~/.git-credentials in plain text
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 wine
 https://wiki.winehq.org/Download
@@ -818,6 +784,41 @@ sudo add-apt-repository ppa:thopiekar/openrgb
 sudo apt update
 sudo apt install openrgb
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------------------------------------------
+extra features
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+edit default kernel in grub
+
+grep submenu /boot/grub/grub.cfg, copy the value of $menuentry_id_option
+"gnulinux-advanced-<numbers, letters and dashes>", its name will be advanced_menu
+grep gnulinux /boot/grub/grub.cfg, copy the value of $menuentry_id_option
+"gnulinux-<kernel version>-amd64-advanced-<numbers, letters and dashes>", its name will be kernel_version
+
+sudo vim /etc/default/grub
+set GRUB_DEFAULT="advanced_menu>kernel_version"
+it should be similar to "GRUB_DEFAULT="gnulinux-advanced-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc>gnulinux-5.10.0-18-amd64-advanced-swa21lei-de1f-33q0-0965-1pw21a85ea22""
+sudo update-grub
+sudo reboot
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+desktop and search entries for programs
+
+sudo vim /usr/share/applications/<program name>.desktop
+add
+"
+[Desktop Entry]
+Encoding=UTF-8
+Exec=/usr/local/lib/postman/Postman/Postman
+Icon=/usr/local/lib/Postman/app/icons/icon_128x128.png
+Type=Application
+Terminal=false
+Comment=API Testing Environment
+Name=Postman
+GenericName=postman-9.27.0
+StartupNotify=false
+Categories=Development;REST
+"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 windows and doing windows specific actions
 for example creating a windows usb boot usb device or downloading media creation tool
 
@@ -865,22 +866,13 @@ start virtual machine, install windows 10
 bugs
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-networking.service failed
+network manager is not configuring device interfaces properly / networking.service failed
 
-ip link show
-find your networking interface, mine is enp3s0
-sudo vim /etc/network/interfaces.d/setup, edit file
-"
-auto lo
-iface lo inet loopback
+ip addr, remember all interfaces, e.g. "enp<numbers and letters>"
+sudo vim /etc/network/interfaces.d/setup, then /etc/network/interfaces
+remove all lines with interfaces except "lo"
+sudo reboot
 
-auto enp3s0
-iface enp3s0 inet dhcp
-"
-where there is eth0, change it to your networking interface,
-mine is enp3s0 so i change it with that
-save file and reboot
-after boot check
 systemctl --failed
 output should be
 "
@@ -895,12 +887,6 @@ casper-md5check.service failed
 
 sudo systemctl disable casper-md5check.service
 sudo reboot
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-wi-fi networks says "device not managed"
-
-sudo nano /etc/NetworkManager/NetworkManager.conf
-under "[ifupdown]", set managed to true
-sudo service network-manager restart
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 untrusted stored key
 
