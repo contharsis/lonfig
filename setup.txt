@@ -59,8 +59,7 @@ physically remove the flash drive
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 enable contrib and non-free repositories, add 32-bit support and update system
 
-sudo apt install vim
-sudo vim /etc/apt/sources.list
+sudo nano /etc/apt/sources.list
 add "contrib non-free" after "deb http://deb.debian.org/debian/ bullseye main" and "deb-src http://deb.debian.org/debian/ bullseye main"
 it should be like this
 "
@@ -69,6 +68,7 @@ deb-src http://deb.debian.org/debian/ bullseye main contrib non-free
 "
 
 sudo dpkg --add-architecture i386
+sudo apt install bash-completion vim
 sudo apt update
 sudo apt upgrade
 sudo apt autoremove
