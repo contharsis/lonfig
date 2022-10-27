@@ -270,7 +270,7 @@ Color, pick "Solid color"
 click color box, pick the color black from bottom right, click "Select"
 Menus
 Desktop Menu, uncheck "Show application icons in menu"
-Window List Menu, uncheck "Show application icons in menu"
+Window List Menu, uncheck everything
 Icons
 check "Show icons on primary display"
 Default Icons
@@ -545,12 +545,6 @@ Clear All History
 "Time range to clear", pick "Everything"
 check "Site settings", "Offline website data"
 click "OK"
-
-https://google.com/
-login to your account
-Settings
-Search settings
-Languages, pick "English", click "Save"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
 programs
@@ -561,7 +555,7 @@ tools
 install with
 sudo apt install <tool>
 
-bash-completion - extend bash's standard completion behavior
+bash-completion - extend bash's standard completion
 vim - text editor
 git - content tracker
 openssh-client - ssh client
@@ -579,8 +573,8 @@ vlc - media player
 wakeonlan - turn on devices on local network
 qbittorrent - fast bittorent clients
 python3-pip - package manager for python
-software-properties-common - manage the repositories that you install software from
-ca-certificates - certificate authorities for mozilla browser
+software-properties-common - manage repositories
+ca-certificates - certificate authorities
 build-essential - c/c++ build tools
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 redshift
@@ -600,9 +594,11 @@ Restart=always
 [Install]
 WantedBy=default.target
 "
+
 day is your daily temperature, night is your nightly temperature
 latitude is the latitude of your location and longitude is the longitude of your location,
 they can also be floating point numbers
+
 systemctl --user daemon-reload
 systemctl --user enable redshift.service
 sudo reboot
@@ -637,7 +633,7 @@ Tools
 Preferences...
 Downloads
 Saving Management
-"Default Save Path", set to /home/<username>/torrents
+"Default Save Path", set to "/home/<username>/torrents"
 restart qbittorrent
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 github
@@ -719,7 +715,6 @@ you will use the jdk installation folder "/usr/lib/jvm" to link the jdks with th
 if your jdk has deb package, it will install automatically there when you run sudo apt-get install ./<jdk deb package>
 if your jdk doesn't have deb package, download the "x64 Compressed Archive" version of the jdk and manually put it inside "/usr/lib/jvm"
 
-after download
 cd ~/Downloads
 sudo mv jdk-8u341-linux-x64.tar.gz /usr/lib/jvm
 sudo tar -xzvf jdk-8u341-linux-x64.tar.gz
@@ -866,10 +861,10 @@ start virtual machine, install windows 10
 bugs
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-network manager is not configuring device interfaces properly / networking.service failed
+network manager is not configuring network interfaces properly / networking.service failed
 
-ip addr, remember all interfaces, e.g. "enp<numbers and letters>"
-sudo vim /etc/network/interfaces.d/setup, then /etc/network/interfaces
+ip addr, remember all interfaces, e.g. "<enp, wlan><numbers and letters>"
+sudo vim /etc/network/interfaces, then /etc/network/interfaces.d/setup
 remove all lines with interfaces except "lo"
 sudo reboot
 
@@ -894,9 +889,10 @@ W: <repo url> Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg)
 section in apt-key(8) for details.
 
 sudo apt-key list
-sudo apt-key export <last 8 characters of pub code together no space> | sudo gpg --dearmour -o /usr/share/keyrings/<key>.gpg
+sudo apt-key export <last 8 characters of pub code together without space> | sudo gpg --dearmour -o /usr/share/keyrings/<key>.gpg
 sudo vim /etc/apt/sources.list.d/<repo>.list
-after "deb" add "[]" and inside them, after "arch=amd64" if you have, add "signed-by=/usr/share/keyrings/<key>.gpg"
+after "deb" add "[signed-by=/usr/share/keyrings/<key>.gpg]"
+it should be "deb [signed-by=/usr/share/keyrings/<key>.gpg] <repo url> <suites> <components>"
 sudo apt update
 sudo apt-key del <last 8 characters of pub code together no space>
 
@@ -904,6 +900,7 @@ if sources list is changed after sudo apt update / upgrade / autoremove
 sudo chattr +i /etc/apt/sources.list.d/<repo>.list
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 after wine install you don't have Open With Wine Windows Program Loader in applications launch menu
+
 sudo ln -s /usr/share/doc/wine/examples/wine.desktop /usr/share/applications
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ram doesn't show in devices in openrgb
