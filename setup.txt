@@ -353,7 +353,7 @@ Timezone, set your timezone
 click "Workspace Switcher", "Notification Plugin", "Action Buttons", click "Remove", click "Remove"
 if you are not on battery, click "Power Manager Plugin", click "Remove", click "Remove"
 
-remove "Mail Reader" from "Applications Menu"
+edit applications menu
 sudo vim /etc/xdg/menus/xfce-applications.menu
 after
 "
@@ -606,13 +606,13 @@ sudo reboot
 qbittorrent
 
 change theme to dark
-download from https://gitlab.com/qbittorrent-black-theme/client
+https://gitlab.com/qbittorrent-black-theme/client
 cd ~/Downloads
 git clone https://gitlab.com/qbittorrent-black-theme/client.git
 for the theme to stay in qbittorrent, you mustn't move or delete black.qbtheme after you set it in qbittorrent,
 so put the file somewhere in configuration files, for example ~/.config/qbittorrent_theme
-mkdir ~/.config/qbittorrent_theme
-cp client/black.qbtheme ~/.config/qbittorrent_theme
+mkdir ~/.config/qbittorrent
+cp client/black.qbtheme ~/.config/qbittorrent
 whoami
 super
 qBittorrent
@@ -621,7 +621,7 @@ Preferences
 Behavior
 Interface
 Use custom UI Theme
-"UI Theme file", click folder icon, set it to "/home/<username>/.config/qbittorrent_theme/black.qbtheme"
+"UI Theme file", click folder icon, set it to "/home/<username>/.config/qbittorrent/black.qbtheme"
 
 change tray icon to dark theme
 Desktop
