@@ -602,6 +602,28 @@ they can also be floating point numbers
 systemctl --user daemon-reload
 systemctl --user enable redshift.service
 sudo reboot
+
+add toggle for turning on and off
+mkdir ~/.config/redshift
+cd ~/.config/redshift
+vim toggle.sh
+add
+"
+#!/bin/bash
+
+declare res="$(systemctl --user is-active redshift.service)"
+
+if [ "$res" = "active" ]; then
+	systemctl --user stop redshift.service
+else
+	systemctl --user restart redshift.service
+fi
+"
+sudo ln -s ~/.config/redshift/toggle.sh /usr/local/bin/redshifttoggle
+super
+Keyboard
+Application Shortcuts
+click "Add", set "Command" to "redshifttoggle", click "OK", set to "alt + r"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 qbittorrent
 
