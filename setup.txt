@@ -198,8 +198,9 @@ edit window manager
 change application finder shortcut
 alt + f3
 Keyboard
-Application Shortcuts
-double-click "xfce4-appfinder", set to "super l"
+
+edit terminal launch shortcut
+double-click "exo-open --launch TerminalEmulator", set to "alt + d"
 
 edit firefox launch shortcut
 double-click "exo-open --launch WebBrowser", the one with "WWW" as shortcut, set to "alt + a"
@@ -207,14 +208,14 @@ double-click "exo-open --launch WebBrowser", the one with "WWW" as shortcut, set
 edit thunar launch shortcut
 double-click "thunar", one with "super + e" as shortcut, set to "alt + e"
 
-edit terminal launch shortcut
-double-click "exo-open --launch TerminalEmulator", set to "alt + d"
-
-add mousepad launch shortuct
-click "Add", set "Command" to "mousepad", click "OK", set to "alt + w"
+edit application finder
+double-click "xfce4-appfinder", set to "super l"
 
 edit session logout shortcut
 double-click "xfce4-session-logout", set to "alt + x"
+
+add mousepad launch shortcuct
+click "Add", set "Command" to "mousepad", click "OK", set to "alt + w"
 
 Layout
 click "Add", add your language
@@ -478,7 +479,6 @@ uncheck "Remember search and form history"
 check "Clear history when Firefox closes"
 click "Settings..."
 uncheck "Cookies"
-check "Offline website data"
 click "OK"
 
 Address Bar
@@ -734,6 +734,9 @@ sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-bui
 sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bullseye/winehq-bullseye.sources
 sudo apt update
 sudo apt install --install-recommends winehq-stable
+
+uninstalling programs in wine
+wine uninstaller
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 winetricks
 https://wiki.winehq.org/Winetricks
