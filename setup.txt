@@ -33,7 +33,8 @@ sudo dd if=linux.iso of=/dev/sda bs=4M status=progress
 ~~~~~~~~~~~~~~~~
 windows
 
-download rufus - https://rufus.ie/
+download rufus
+https://rufus.ie/
 open it
 "Device", pick the usb
 "Boot selection", pick the linux.iso file
@@ -92,7 +93,8 @@ sudo radeontop
 
 manage gpu fans
 sudo pip3 install amdgpu-fan
-sudo vim /etc/amdgpu-fan.yml, add
+sudo vim /etc/amdgpu-fan.yml
+add
 "
 speed_matrix:  # -[temp(*C), speed(0-100%)]
 - [0, 0]
@@ -158,7 +160,7 @@ glxinfo  | grep rendering
 output should be
 "direct rendering: Yes"
 
-to test how many frames your video card is putting out
+test how many frames your video card is putting out
 glxgears -info
 ~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -174,7 +176,7 @@ systemctl is-system-running
 output should be
 "running"
 
-if there are active / sub failed, check bugs section, fix them, 
+if there are active / sub failed, check bugs section, fix them
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 add devices to fstab
 
@@ -281,7 +283,7 @@ edit background of grub
 alt + e
 take picture of folder background
 sudo apt install gimp
-Super
+super
 GNU Image Manipulation Program
 create black image, name it black.png, create new empty image and paste the folder background image
 copy the color and create new image with that color named gray.png
@@ -534,6 +536,9 @@ when you have opened the tab you want to mute, right-click on it
 hover "Mutelinks"
 click "Add/edit entry to Blacklist", you can remove quotes if you want, click "Add to Blacklist"
 
+Vimium-FF - Shortcuts on pages and more
+https://addons.mozilla.org/en-US/firefox/addon/vimium-ff/
+
 Privacy & Security
 Cookies and Site Data
 click "Clear Data..."
@@ -581,7 +586,7 @@ redshift
 
 mkdir -p ~/.config/systemd/user
 vim ~/.config/systemd/user/redshift.service
-add to file
+add
 "
 [Unit]
 Description=Display color temperature adjuster
@@ -676,6 +681,7 @@ set passphrase to memorable password
 eval "$(ssh-agent -s)", check if ssh-agent process is running, otherwise start it
 for each ssh key / github account add this to end of file
 vim ~/.ssh/config
+add
 "
 Host <github username>
 	User git
@@ -709,7 +715,7 @@ chmod 644 <key name>.pub
 personal authentication token
 
 git config --global credential.helper store
-go to https://github.com
+https://github.com
 Settings
 Developer settings
 Personal access tokens
@@ -843,13 +849,14 @@ windows and doing windows specific actions
 for example creating a windows usb boot usb device or downloading media creation tool
 
 sudo vim /etc/apt/sources.list
-add to file
+add
 "
 deb http://deb.debian.org/debian bullseye-backports main
 "
 sudo apt update
 sudo apt install fasttrack-archive-keyring
-sudo vim /etc/apt/sources.list, add lines to file
+sudo vim /etc/apt/sources.list
+add
 "
 deb https://fasttrack.debian.net/debian-fasttrack/ bullseye-fasttrack main contrib
 deb https://fasttrack.debian.net/debian-fasttrack/ bullseye-backports-staging main contrib
