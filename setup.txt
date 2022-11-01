@@ -624,6 +624,7 @@ else
 	systemctl --user restart redshift.service
 fi
 "
+chmod +x toggle.sh
 sudo ln -s ~/.config/redshift/toggle.sh /usr/local/bin/redshifttoggle
 super
 Keyboard
@@ -667,6 +668,7 @@ github
 
 git config --global init.defaultBranch main
 git config --global pull.rebase false
+git config --global core.editor "vim"
 use "git config" without "--global" to set config for the repository you are currently in
 set "git config user.name" and "git config user.email" for each repository independently
 
