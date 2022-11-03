@@ -581,6 +581,7 @@ python3-pip - package manager for python
 software-properties-common - manage repositories
 ca-certificates - certificate authorities
 build-essential - c/c++ build tools
+aira2 - fast download from anywhere and anything
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 redshift
 
