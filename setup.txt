@@ -241,12 +241,14 @@ double-click "Maximize window", set to "alt + f"
 change hide window shortcut
 double-click "Hide window", set to "alt + z"
 
-disable frame around selected windows and center all windows
+disable frame around selected windows, center all windows, disable dimming on unfocused windows
 super
 Window Manager Tweaks
 Cycling, uncheck "Draw frame around selected window while cycling"
 Placement, "Minimum size of windows to trigger smart placement" set to "Large"
 Compositor, uncheck "Show windows preview in place of icons when cycling", "Show shadows under dock windows", "Show shadows under regular windows"
+Opacity of window decorations
+"Opacity of inactive windows", set to max "Opaque"
 
 disable workspaces
 super
