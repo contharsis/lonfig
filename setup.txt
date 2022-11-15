@@ -6,29 +6,29 @@ download
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 desktop environment
 
-named "debian-live-<version>-amd64-xfce+nonfree.iso"
+filename "debian-live-<version>-amd64-xfce+nonfree.iso"
 https://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/current-live/amd64/iso-hybrid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 server (headless)
 
-named "debian-live-<version>-amd64-standard+nonfree.iso"
+filename "debian-live-<version>-amd64-standard+nonfree.iso"
 https://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/current-live/amd64/iso-hybrid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
 setup
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-create bootable usb
+create bootable usb and install debian
 
-put usb in computer
+put usb in, size must be atleast 8 gigabytes
 ~~~~~~~~~~~~~~~~
 linux
 
 lsblk
 sudo umount /dev/sda?*
-cd ~/Downloads
 sudo fdisk /dev/sda
 delete all partitions, create new gpt partition table, write and exit
+cd ~/Downloads
 sudo dd if=linux.iso of=/dev/sda bs=4M status=progress  
 ~~~~~~~~~~~~~~~~
 windows
@@ -36,21 +36,24 @@ windows
 download rufus
 https://rufus.ie/
 open it
-"Device", pick the usb
-"Boot selection", pick the linux.iso file
-click "Start"
+Device, pick usb
+Boot selection, pick linux.iso file
+click Start
 ~~~~~~~~~~~~~~~~
+
+restart, boot into usb, select "Debian Graphical Installer", install and boot into debian	
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 change session
 
-while in login menu, click first top right icon, pick "Xfce Session"
+while in login menu click first top right icon, pick "Xfce Session"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 add user to sudoers
 
-whoami
+whoami, your username
 su
 sudo visudo
-under "root ALL=(ALL:ALL) ALL" add "<username> ALL=(ALL:ALL) ALL"
+under "# User privilege specification" add
+"<username> ALL=(ALL:ALL) ALL"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 remove flash drive
 
@@ -60,8 +63,13 @@ physically remove the flash drive
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 enable contrib and non-free repositories, add 32-bit support and update system
 
-sudo nano /etc/apt/sources.list
-add "contrib non-free" after "deb http://deb.debian.org/debian/ bullseye main" and "deb-src http://deb.debian.org/debian/ bullseye main"
+sudo nano /etc/apt/sources.list, add
+"contrib non-free"
+after
+"deb http://deb.debian.org/debian/ bullseye main"
+and
+"deb-src http://deb.debian.org/debian/ bullseye main"
+
 it should be like this
 "
 deb http://deb.debian.org/debian/ bullseye main contrib non-free
@@ -83,7 +91,9 @@ amd
 https://wiki.debian.org/AtiHowTo
 
 lspci -nn | egrep -i "3d|display|vga"
-some output should be similar to "01:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Barts PRO [Radeon HD 6850] [1002:6739]"
+some output should be similar to
+"01:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Barts PRO [Radeon HD 6850] [1002:6739]"
+
 sudo apt install firmware-amd-graphics libgl1-mesa-dri libglx-mesa0 mesa-vulkan-drivers xserver-xorg-video-all libglx-mesa0:i386 mesa-vulkan-drivers:i386 libgl1-mesa-dri:i386
 sudo reboot
 
@@ -93,8 +103,7 @@ sudo radeontop
 
 manage gpu fans
 sudo pip3 install amdgpu-fan
-sudo vim /etc/amdgpu-fan.yml
-add
+sudo vim /etc/amdgpu-fan.yml, add
 "
 speed_matrix:  # -[temp(*C), speed(0-100%)]
 - [0, 0]
@@ -104,8 +113,7 @@ speed_matrix:  # -[temp(*C), speed(0-100%)]
 - [90, 100]
 "
 
-sudo vim /etc/systemd/system/amdgpu-fan.service
-add
+sudo vim /etc/systemd/system/amdgpu-fan.service, add
 "
 [Unit]
 Description=Service for controling amdgpu fan.
@@ -129,7 +137,9 @@ nvidia
 https://wiki.debian.org/NvidiaGraphicsDrivers
 
 lspci -nn | egrep -i "3d|display|vga"
-some output should be similar to "07:00.0 VGA compatible controller [0300]: NVIDIA Corporation GM206 [GeForce GTX 960] [10de:1401] (rev a1)"
+some output should be similar to
+"07:00.0 VGA compatible controller [0300]: NVIDIA Corporation GM206 [GeForce GTX 960] [10de:1401] (rev a1)"
+
 sudo apt install linux-headers-amd64 nvidia-driver firmware-misc-nonfree nvidia-driver-libs:i386
 sudo reboot
 
@@ -176,7 +186,7 @@ systemctl is-system-running
 output should be
 "running"
 
-if there are active / sub failed, check bugs section, fix them
+if there are active / sub failed, check problems section, fix them
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 add devices to fstab
 
@@ -186,8 +196,8 @@ sudo mkfs.ext4 /dev/sda1
 
 sudo blkid
 sudo mkdir /mnt/storage
-sudo vim /etc/fstab
-add to end of file, "UUID=<uuid of partition, /dev/sda1> <mount point, /mnt/storage> <type of device, ext4> defaults 0 2"
+sudo vim /etc/fstab, add
+"UUID=<uuid of partition, /dev/sda1> <mount point, /mnt/storage> <type of device, ext4> defaults 0 2"
 sudo systemctl daemon-reload
 sudo reboot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -200,6 +210,7 @@ edit window manager
 change application finder shortcut
 alt + f3
 Keyboard
+Application Shortcuts
 
 edit terminal launch shortcut
 double-click "exo-open --launch TerminalEmulator", set to "alt + d"
@@ -216,13 +227,13 @@ double-click "xfce4-appfinder", set to "super l"
 edit session logout shortcut
 double-click "xfce4-session-logout", set to "alt + x"
 
-add mousepad launch shortcuct
+add mousepad launch shortcut
 click "Add", set "Command" to "mousepad", click "OK", set to "alt + w"
 
 Layout
 click "Add", add your language
-Change layout option, pick combination to change your language
-check "Use system defaults" then uncheck it
+"Change layout option", pick combination to change your language
+check "Use system defaults" then uncheck it (this is a bug and should be checked if it's fixed)
 
 remove title bar and borders from windows
 sudo mkdir -p /usr/share/themes/Null/xfwm4
@@ -245,17 +256,12 @@ disable frame around selected windows, center all windows, disable dimming on un
 super
 Window Manager Tweaks
 Cycling, uncheck "Draw frame around selected window while cycling"
-Placement, "Minimum size of windows to trigger smart placement" set to "Large"
-Compositor, uncheck "Show windows preview in place of icons when cycling", "Show shadows under dock windows", "Show shadows under regular windows"
-Opacity of window decorations
-"Opacity of inactive windows", set to max "Opaque"
+Placement, "Minimum size of windows to trigger smart placement", set to "Large"
+Compositor, uncheck "Enable display compositing" 
 
 disable workspaces
 super
-Workspaces
-General
-Layout
-"Number of workspaces", set to 1
+Workspaces, General, Layout, "Number of workspaces", set to 1
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 edit desktop environment
 
@@ -275,42 +281,49 @@ Color, pick "Solid color"
 click color box, pick the color black from bottom right, click "Select"
 Menus
 Desktop Menu, uncheck "Show application icons in menu"
-Window List Menu, uncheck everything
+Window List Menu, uncheck "Show window list menu on desktop middle click"
 Icons
 check "Show icons on primary display"
 Default Icons
 uncheck everything
 
-edit background of grub
+edit grub and greeter
 alt + e
 take picture of folder background
 sudo apt install gimp
 super
 GNU Image Manipulation Program
-create black image, name it black.png, create new empty image and paste the folder background image
-copy the color and create new image with that color named gray.png
-save black.png and gray.png, export them to ~/Desktop
-sudo mv ~/Desktop/black.png ~/Desktop/gray.png /usr/share/pixmaps
+create black image, name it black_bg.png, save it in ~/Desktop
+open folder, use "prt sc" and save it to clipboard, paste it in gimp and color pick it 
+create new image with that color named gray_bg.png, save it in ~/Desktop
+sudo mv ~/Desktop/black_bg.png ~/Desktop/gray_bg.png /usr/share/pixmaps
 sudo vim /etc/default/grub
+
+to remove initial splash screen
 remove "splash" from "GRUB_CMDLINE_LINUX_DEFAULT"
+
 if you have only one operating system
 set "GRUB_TIMEOUT" to 0
+
+Change default splash screen
 add
 "
-# Splash background
-GRUB_BACKGROUND=/usr/share/pixmaps/black.png
+# Splash screen
+GRUB_BACKGROUND=/usr/share/pixmaps/black_bg.png
 "
 sudo update-grub
 sudo reboot
 
 edit background and login default picture of login
 sudo vim /usr/share/lightdm/lightdm-gtk-greeter.conf.d/01_debian.conf
-set "background" to #000000
-set "theme-name" to Adwaita-dark
+"background", set to "#000000"
+"theme-name", set to "Adwaita-dark"
+
 if you want you can add default user image,
 add "default-user-image=<path to image>"
+
 if you want to remove it
-default-user-image=/usr/share/pixmaps/gray.png
+default-user-image=/usr/share/pixmaps/gray_bg.png
 
 edit default applications
 super
@@ -322,7 +335,7 @@ Others
 disable program reloading from last session
 close all programs
 alt + q
-uncheck "Save session for future logins"
+uncheck "Save session for future logins", pick "Log Out", log in 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 edit panels
 
@@ -337,26 +350,21 @@ Panel
 Panel 2, click minus next to "Panel 2", click "Remove"
 
 edit panel 1
-Panel 1
-Display
-General
+Panel 1, Display, General
 "Output", pick "Primary"
 uncheck "Lock panel", move panel to bottom, check "Lock panel"
 "Automatically hide the panel", pick "Always"
 Measurements, "Row size (pixels)", set to 16
 Items
-double-click "Applications Menu"
-Appearance, uncheck "Show icons in menu", "Show button title"
-double-click "Window Buttons"
-Appearance
-check "Show flat buttons"
-uncheck "Show handle"
+double-click "Applications Menu", Appearance, uncheck "Show icons in menu", "Show button title"
+double-click "Window Buttons", Appearance, check "Show flat buttons", uncheck "Show handle"
 Behaviour, "Middle click action", pick "Close Window"
 double-click "Clock"
 Time Settings
 Timezone, set your timezone
 click "Workspace Switcher", "Notification Plugin", "Action Buttons", click "Remove", click "Remove"
 if you are not on battery, click "Power Manager Plugin", click "Remove", click "Remove"
+click on all separators, except one after "Window Buttons" with "Expand" turned on, click "Remove", click "Remove"
 
 edit applications menu
 sudo vim /etc/xdg/menus/xfce-applications.menu
@@ -377,13 +385,13 @@ remove all "<Separator/>" tags
 edit sound
 go to desktop
 click on sound plugin on taskbar
-set everything to 100%
+set everything to "100%"
 
 edit notification
 super
 Notifications
 General
-Appearancem, "Opacity", set to "100%"
+Appearance, "Opacity", set to "100%"
 Animations, uncheck "Fade out"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 edit display
@@ -391,7 +399,7 @@ edit display
 super
 Display
 General
-arrange displays as necessary
+arrange displays
 check "Primary Display" for the main display
 click "Keep this configuration"
 pick max value for "Refresh rate" for all displays
@@ -399,10 +407,9 @@ pick max value for "Refresh rate" for all displays
 turn off sleep
 
 super
-Power Manager
-Display
+Power Manager, Display
 uncheck "Display power management"
-set "Blank after" to "Never"
+"Blank after", set to "Never"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 terminal
 
@@ -425,7 +432,7 @@ thunar
 alt + e
 View
 uncheck "Menubar"
-click <username> on side pane
+click "<username>" on side pane
 right-click "Downloads"
 pick "Send To", pick "Side Pane (Create Shortcut)"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -492,19 +499,21 @@ about:config
 uncheck "Warn me when I attempt to access these preferences"
 click "Accept the Risk and Continue"
 "browser.compactmode.show", set to "true"
+
 right-click toolbar
 Customize Toolbar...
+edit things
 Density, pick "Compact (not supported)"
-edit other things as you like
 
 edit bookmarks
 open new tab, right-click on bookmark toolbar, click "Manage Bookmarks"
 Bookmarks Toolbar, delete "Getting Started"
-Bookmarks Menu, delete Mozilla Firefox folder
+Bookmarks Menu, delete "Mozilla Firefox" folder
 
 add extensions
-search extensions firefox in the search engine or go to https://addons.mozilla.org/en-US/firefox
-add extensions, for each click Add, then check "Allow this extension to run in Private Windows", then click "Okay":
+search extensions firefox in the search engine or go to
+https://addons.mozilla.org/en-US/firefox
+add extensions, for each click "Add", then check "Allow this extension to run in Private Windows", then click "Okay"
 
 uBlock Origin - efficient wide-spectrum content blocker
 https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/
@@ -512,7 +521,7 @@ https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/
 Dark Reader - dark mode for every website
 https://addons.mozilla.org/en-US/firefox/addon/darkreader/
 
-Unhook - Hide Youtube sections
+Unhook - hide youtube sections
 https://addons.mozilla.org/en-US/firefox/addon/youtube-recommended-videos/
 open it, change to dark mode and turn it on with top right buttons
 uncheck "Hide Playlist"
@@ -522,7 +531,7 @@ check "Hide Explore"
 check "Trending"
 check "Hide Shorts Tab"
 
-Video Resumer - Resumes Youtube videos from where you played them last
+Video Resumer - resumes Youtube videos from where you played them last
 https://addons.mozilla.org/en-US/firefox/addon/video-resumer/
 open Settings
 Extensions & Themes
@@ -532,13 +541,13 @@ Preferences
 "Do not memorize position if only this many seconds left on the video", set to 1
 "Forget videos older than this many days", set to 365
 
-MuteLinks - Mute tabs based on URL
+MuteLinks - mute tabs based on URL
 https://addons.mozilla.org/en-US/firefox/addon/mutelinks/
 when you have opened the tab you want to mute, right-click on it
 hover "Mutelinks"
 click "Add/edit entry to Blacklist", you can remove quotes if you want, click "Add to Blacklist"
 
-Vimium-FF - Shortcuts on pages and more
+Vimium-FF - shortcuts on pages and more
 https://addons.mozilla.org/en-US/firefox/addon/vimium-ff/
 
 Privacy & Security
@@ -547,7 +556,7 @@ click "Clear Data..."
 click "Clear"
 
 History
-click "CLear History..."
+click "Clear History..."
 Clear All History
 "Time range to clear", pick "Everything"
 check "Site settings", "Offline website data"
@@ -583,7 +592,7 @@ python3-pip - package manager for python
 software-properties-common - manage repositories
 ca-certificates - certificate authorities
 build-essential - c/c++ build tools
-aira2 - fast download from anywhere and anything
+aria2 - fast download from anywhere and anything
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 redshift
 
@@ -671,8 +680,8 @@ github
 
 git config --global init.defaultBranch main
 git config --global pull.rebase false
-git config --global core.editor "vim"
-use "git config" without "--global" to set config for the repository you are currently in
+git config --global core.editor vim
+use "git config" without "--global" to only set config for the repository you are currently in
 set "git config user.name" and "git config user.email" for each repository independently
 
 authentication
@@ -867,9 +876,7 @@ deb https://fasttrack.debian.net/debian-fasttrack/ bullseye-fasttrack main contr
 deb https://fasttrack.debian.net/debian-fasttrack/ bullseye-backports-staging main contrib
 "
 sudo apt update
-sudo apt install virtualbox
-sudo apt install virtualbox-ext-pack
-sudo apt install virtualbox-guest-x11
+sudo apt install virtualbox virtualbox-ext-pack virtualbox-guest-x11
 
 download windows 10 iso
 super
@@ -895,12 +902,11 @@ pick windows10.iso
 start virtual machine, install windows 10
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
-bugs
+problems
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 network manager is not configuring network interfaces properly / networking.service failed
 
-ip addr, remember all interfaces, e.g. "<enp, wlan><numbers and letters>"
 sudo vim /etc/network/interfaces, then /etc/network/interfaces.d/setup
 remove all lines with interfaces except "lo"
 sudo reboot
@@ -950,6 +956,7 @@ sudo reboot
 certificate errors
 "ERROR: The certificate of <url> is not trusted / hasn't got a known issuer."
 
+solution 1
 if your system time isn't valid
 
 sudo apt install ntpdate
@@ -961,7 +968,7 @@ your hardware clock should be utc, and the system should adapt it's timezone to 
 if you have windows for dual booting (which causes the problem in the first place)
 add dword registry "RealTimeIsUniversal" set to 1 in "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" 
 
-otherwise
+solution 2
 sudo apt install ca-certificates
 or when using wget add flag --no-check-certificate
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
