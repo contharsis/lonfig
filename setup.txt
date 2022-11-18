@@ -40,7 +40,6 @@ Device, pick usb
 Boot selection, pick linux.iso file
 click Start
 ~~~~~~~~~~~~~~~~
-
 restart, boot into usb, select "Debian Graphical Installer", install and boot into debian	
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 change session
@@ -64,8 +63,7 @@ physically remove the flash drive
 enable contrib and non-free repositories, add 32-bit support and update system
 
 sudo nano /etc/apt/sources.list, add
-"contrib non-free"
-after
+"contrib non-free" after
 "deb http://deb.debian.org/debian/ bullseye main"
 and
 "deb-src http://deb.debian.org/debian/ bullseye main"
@@ -233,7 +231,7 @@ click "Add", set "Command" to "mousepad", click "OK", set to "alt + w"
 Layout
 click "Add", add your language
 "Change layout option", pick combination to change your language
-check "Use system defaults" then uncheck it (this is a bug and should be checked if it's fixed)
+check "Use system defaults" then uncheck it (you need to do this otherwise changing language doesn't work, this is a bug and should be checked if it's fixed)
 
 remove title bar and borders from windows
 sudo mkdir -p /usr/share/themes/Null/xfwm4
@@ -257,7 +255,7 @@ super
 Window Manager Tweaks
 Cycling, uncheck "Draw frame around selected window while cycling"
 Placement, "Minimum size of windows to trigger smart placement", set to "Large"
-Compositor, uncheck "Enable display compositing" 
+Compositor, uncheck "Show windows preview in place of icons when cycling", "Show shadows under dock windows", "Show shadows under regular windows"
 
 disable workspaces
 super
@@ -287,16 +285,18 @@ check "Show icons on primary display"
 Default Icons
 uncheck everything
 
-edit grub and greeter
+edit grub
 alt + e
 take picture of folder background
 sudo apt install gimp
 super
 GNU Image Manipulation Program
-create black image, name it black_bg.png, save it in ~/Desktop
-open folder, use "prt sc" and save it to clipboard, paste it in gimp and color pick it 
-create new image with that color named gray_bg.png, save it in ~/Desktop
+create black image with dimensions 1920x1080, name it black_bg.png, save it in ~/Desktop
+open folder, use "print screen" button
+Region to capture, pick "Select a region", pick background of folder and save image it to clipboard, paste it in gimp and color pick it 
+create new image with dimensions 1920x1080 with that color and name it gray_bg.png, save it in ~/Desktop
 sudo mv ~/Desktop/black_bg.png ~/Desktop/gray_bg.png /usr/share/pixmaps
+
 sudo vim /etc/default/grub
 
 to remove initial splash screen
@@ -314,16 +314,18 @@ GRUB_BACKGROUND=/usr/share/pixmaps/black_bg.png
 sudo update-grub
 sudo reboot
 
-edit background and login default picture of login
+edit greeter
 sudo vim /usr/share/lightdm/lightdm-gtk-greeter.conf.d/01_debian.conf
+
+edit background and theme
 "background", set to "#000000"
 "theme-name", set to "Adwaita-dark"
 
-if you want you can add default user image,
-add "default-user-image=<path to image>"
+if you want you can add default user image, add
+"default-user-image=<path to image>"
 
-if you want to remove it
-default-user-image=/usr/share/pixmaps/gray_bg.png
+if you want to remove it, add
+"default-user-image=/usr/share/pixmaps/gray_bg.png"
 
 edit default applications
 super
@@ -367,8 +369,7 @@ if you are not on battery, click "Power Manager Plugin", click "Remove", click "
 click on all separators, except one after "Window Buttons" with "Expand" turned on, click "Remove", click "Remove"
 
 edit applications menu
-sudo vim /etc/xdg/menus/xfce-applications.menu
-after
+sudo vim /etc/xdg/menus/xfce-applications.menu, after
 "
 <Include>
      <Category>X-Xfce-Toplevel</Category>
@@ -383,18 +384,18 @@ add
 remove all "<Separator/>" tags
 
 edit sound
-go to desktop
-click on sound plugin on taskbar
+move mouse to bottom right of taskbar
+click sound plugin
 set everything to "100%"
 
-edit notification
+edit notifications
 super
 Notifications
 General
 Appearance, "Opacity", set to "100%"
 Animations, uncheck "Fade out"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-edit display
+edit displays
 
 super
 Display
@@ -402,7 +403,7 @@ General
 arrange displays
 check "Primary Display" for the main display
 click "Keep this configuration"
-pick max value for "Refresh rate" for all displays
+"Refresh rate", pick max value for all displays
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 turn off sleep
 
@@ -571,8 +572,10 @@ tools
 install with
 sudo apt install <tool>
 
+essential
 bash-completion - extend bash's standard completion
 vim - text editor
+build-essential - building and compiling tools
 git - content tracker
 openssh-client - ssh client
 openssh-server - ssh server
@@ -581,24 +584,24 @@ pmount - automatic mount as user
 curl - transfer a URL
 wget - non-interactive network downloader
 net-tools - configure network interfaces
+gimp - graphical editor
 inxi - system information script
 redshift - display color temperature adjuster
-htop - interactive process viewer
-gimp - graphical editor
-vlc - media player
-wakeonlan - turn on devices on local network
-qbittorrent - fast bittorent clients
-python3-pip - package manager for python
 software-properties-common - manage repositories
-ca-certificates - certificate authorities
-build-essential - c/c++ build tools
+
+user standard
+htop - interactive process viewer
+vlc - media player
+qbittorrent - fast bittorent clients
 aria2 - fast download from anywhere and anything
+wakeonlan - turn on devices on local network
+python3-pip - package manager for python
+ca-certificates - certificate authorities
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 redshift
 
 mkdir -p ~/.config/systemd/user
-vim ~/.config/systemd/user/redshift.service
-add
+vim ~/.config/systemd/user/redshift.service, add
 "
 [Unit]
 Description=Display color temperature adjuster
@@ -623,8 +626,7 @@ sudo reboot
 add toggle for turning on and off
 mkdir ~/.config/redshift
 cd ~/.config/redshift
-vim toggle.sh
-add
+vim toggle.sh, add
 "
 #!/bin/bash
 
@@ -636,6 +638,7 @@ else
 	systemctl --user restart redshift.service
 fi
 "
+
 chmod +x toggle.sh
 sudo ln -s ~/.config/redshift/toggle.sh /usr/local/bin/redshifttoggle
 super
@@ -651,6 +654,7 @@ cd ~/Downloads
 git clone https://gitlab.com/qbittorrent-black-theme/client.git
 for the theme to stay in qbittorrent, you mustn't move or delete black.qbtheme after you set it in qbittorrent,
 so put the file somewhere in configuration files, for example ~/.config/qbittorrent_theme
+
 mkdir ~/.config/qbittorrent_theme
 cp client/black.qbtheme ~/.config/qbittorrent_theme
 whoami
@@ -694,8 +698,7 @@ set the file in which to save the key to <github username>_rsa
 set passphrase to memorable password
 eval "$(ssh-agent -s)", check if ssh-agent process is running, otherwise start it
 for each ssh key / github account add this to end of file
-vim ~/.ssh/config
-add
+vim ~/.ssh/config, add
 "
 Host <github username>
 	User git
@@ -704,6 +707,7 @@ Host <github username>
 	IdentitiesOnly yes
 	IdentityFile ~/.ssh/<github username>_rsa
 "
+
 https://github.com
 Settings
 SSH and GPG keys
@@ -745,7 +749,7 @@ download latest version java with product/file description as "x64 Debian Packag
 cd ~/Downloads
 sudo apt-get install ./jdk-<version>_linux-x64_bin.deb
 find directory where your jdk installed
-vim ~/.bashrc, add to end of file
+vim ~/.bashrc, add
 "
 # Java
 export JAVA_HOME="/usr/lib/jvm/jdk-<version>"
@@ -777,7 +781,7 @@ sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/
 sudo apt update
 sudo apt install --install-recommends winehq-stable
 
-uninstalling programs in wine
+uninstalling in wine
 wine uninstaller
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 winetricks
@@ -791,7 +795,6 @@ cd ~/Downloads
 wget  https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
 chmod +x winetricks
 ./winetricks
-download what you need
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 wakeonlan
 
@@ -824,6 +827,29 @@ sudo add-apt-repository ppa:thopiekar/openrgb
 sudo apt update
 sudo apt install openrgb
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+qemu/virt-manager creating virtual machines with kvm, preferable over virtualbox for performance and being better in general
+
+sudo apt install qemu qemu-kvm virt-manager dnsmasq vde2 bridge-utils
+
+sudo virsh net-start default
+sudo virsh net-autostart default
+
+whoami, your username
+sudo adduser <username> libvirt
+sudo adduser <username> libvirt-qemu
+sudo systemctl status libvirtd
+
+virt-manager in terminal, or
+super
+Virtual Machine Manager
+
+Edit, General, check "Enable XML editing"
+
+when editing a configuration, change a configuration, then without clicking "Apply" go to another one
+"There are unapplied changes. Would you like to apply them now?", check "Don't warn me again.", click "Yes"
+
+when deleting a virtual machine, right-click, click "Delete", choose only "*.qcow*" files, click "Delete", check "Don't show this message again", click "OK"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
 extra features
 
@@ -843,8 +869,7 @@ sudo reboot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 desktop and search entries for programs
 
-sudo vim /usr/share/applications/<program name>.desktop
-add
+sudo vim /usr/share/applications/<program name>.desktop, add
 "
 [Desktop Entry]
 Encoding=UTF-8
@@ -859,24 +884,92 @@ StartupNotify=false
 Categories=Development;REST
 "
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-windows and doing windows specific actions
+create windows 10 virtual machine in virtual manager to do windows specific actions
 for example creating a windows usb boot usb device or downloading media creation tool
 
-sudo vim /etc/apt/sources.list
-add
+download windows 10 iso
+download virtio windows 10 drivers
+https://github.com/virtio-win/virtio-win-pkg-scripts/blob/master/README.md
+https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso
+super
+Virtual Machine Manager
+File
+New Virtual Machine
+Choose how you would like to install the operating system, pick "Local install media (ISO image or CDROM)", click "Forward"
+Choose ISO or CDROM install media, click "Browse...", pick windows 10 iso
+Choose the operating system you are installing, uncheck "Automatically detect from the installation media / source"
+set to windows 10 and pick "Microsoft Windows 10 (win10)", click "Forward"
+Choose Memory and CPU settings, Memory, set to atleast 4096 MiB, CPUs, set to at least 4, click "Forward"
+pick "Create a disk image for the virtual machine" set to at least 60 GiB, click "Forward"
+Ready to begin the installation, check "Customize configuration before install"
+XML, delete
 "
-deb http://deb.debian.org/debian bullseye-backports main
+<timer name="rtc" tickpolicy="catchup"/>
+<timer name="pit" tickpolicy="delay"/>
 "
+
+set "present" to "yes" in
+"<timer name="hpet" present="no"/>", so it looks like
+"<timer name="hpet" present="yes"/>"
+click "Apply"
+
+CPUs
+Details
+Topology, check "Manually set CPU topology"
+"Sockets", set to 1
+"Cores", set to half of the CPUs value you did in the 4-th step, if you set to 4 CPUs, then here you would set it to 2
+"Threads", set to twice the "Cores"
+click "Apply"
+
+SATA Disk 1
+Details
+Virtual Disk
+"Disk bus", pick VirtIO
+click "Apply"
+
+NIC <mac address>
+Details
+Virtual Network Interface
+"Device model", pick virtio
+click "Apply"
+
+click "Add Hardware"
+pick Storage
+Details
+"Device type", pick CDROM device
+click "Finish"
+
+SATA CDROM 2
+click "Browse", click "Browse Local", pick virtio windows 10 drivers
+click "Apply"
+
+click "Begin Installation", do the standard steps
+when you get to "Which type of installation do you want?"
+pick "Custom: Install Windows only (advanced)", click "Load driver", click "OK"
+pick "Red Hat VirtIO SCSI controller (<letter>:\amd64\w10\viostor.inf)", click "Next"
+after your disk comes up, don't click "New", click "Next"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------------------------------------------
+deprecated
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+virtualbox
+
+sudo vim /etc/apt/sources.list, add
+"deb http://deb.debian.org/debian bullseye-backports main"
+
 sudo apt update
 sudo apt install fasttrack-archive-keyring
-sudo vim /etc/apt/sources.list
-add
+sudo vim /etc/apt/sources.list, add
 "
 deb https://fasttrack.debian.net/debian-fasttrack/ bullseye-fasttrack main contrib
 deb https://fasttrack.debian.net/debian-fasttrack/ bullseye-backports-staging main contrib
 "
+
 sudo apt update
 sudo apt install virtualbox virtualbox-ext-pack virtualbox-guest-x11
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+create windows 10 virtual machine in virtualbox
 
 download windows 10 iso
 super
@@ -998,5 +1091,18 @@ USB Device Filters
 second icon on right is the one to add one usb device
 you can also click the first one to add a filter that enables all usb devices
 to be used inside the virtual machine
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internet is not connected in windows 10 qemu/virtual manager virtual machine
+
+start windows 10 instance
+Device Manager
+search network adapter with yellow triangle (warning)
+if it's named something else than "Ethernet Controller" like "Red Hat VirtIO Ethernet Adapter"
+right-click it, click "Remove Device", check "Delete drivers"
+refresh device manager, now it should appear as "Ethernet Controller"
+right-click "Ethernet Controller", click "Update driver"
+click "Browse my computer for drivers", click "Browse..."
+go to "<letter of virtio windows 10 drivers>:\NetKVM\w10\<your processor architecture, for example amd64>"
+click "OK", click "Next", after update the new network device should be something like "Red Hat VirtIO Ethernet Adapter"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
