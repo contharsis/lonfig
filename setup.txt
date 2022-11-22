@@ -570,8 +570,7 @@ programs
 tools
 
 install with
-sudo apt install <tool>
-or if specified follow instructions in the tools section
+sudo apt install <tool>, or if specified follow instructions in the tools section
 
 essential
 bash-completion - extend bash's standard completion
@@ -606,6 +605,28 @@ ca-certificates - certificate authorities
 deprecated
 virtualbox - manage virtual machines
 skypeforlinux - text messages and video chat
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ssh server
+
+on server
+sudo apt install openssh-server
+whoami, your username
+go to your default gateway, usually "192.168.0.1"
+find your public ip
+open dhcp server
+find mac address of machine with ssh server
+create address reservation for it with mac address
+open nat forwarding, port forwarding, or whoever it's named in your router
+add forward with parameters
+external port - port from range of 0 - 65535
+internal ip - reserved ip of the machine with ssh server
+internal port - 22
+protocol - all
+enable it
+reboot router
+
+to connect to server
+ssh -p <external port> <username>@<public ip or internal ip> 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 redshift
 
