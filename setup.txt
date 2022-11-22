@@ -580,7 +580,9 @@ build-essential - building and compiling tools
 git - content tracker
 openssh-client - ssh client
 openssh-server - ssh server
-unar - operate with .rar files
+unar - operate with rar archives
+zstd - operate with zstd archives
+zpaq - operate with zpaq archives
 pmount - automatic mount as user
 curl - transfer a URL
 wget - non-interactive network downloader
@@ -598,11 +600,12 @@ qbittorrent-nox - fast bittorrent client, run as a server with webui
 aria2 - fast download from anywhere and anything
 wakeonlan - turn on devices on local network, install on clients
 python3-pip - package manager for python
-ca-certificates - certificate authorities
 qemu/virt-manager - manage virtual machines locally or remotely, install instructions in tools section
+ca-certificates - certificate authorities
 
 deprecated
-virtualbox - manage virtual machines, install instructions in tools section
+virtualbox - manage virtual machines
+skypeforlinux - text messages and video chat
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 redshift
 
@@ -1040,6 +1043,13 @@ click disk button next to it
 pick "Choose a disk file..."
 pick windows10.iso
 start virtual machine, install windows 10
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+slypeforlinux
+
+curl https://repo.skype.com/data/SKYPE-GPG-KEY | sudo apt-key add -
+echo "deb https://repo.skype.com/deb stable main" | sudo tee -a /etc/apt/sources.list.d/skype.list
+sudo apt update
+sudo apt install skypeforlinux
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
 problems
