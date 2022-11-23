@@ -1065,7 +1065,13 @@ pick "Choose a disk file..."
 pick windows10.iso
 start virtual machine, install windows 10
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-slypeforlinux
+slypeforlinux (check if first solution works and auto adds skype stable repo in /etc/apt/sources.list.d/)
+
+https://www.skype.com/en/get-skype/
+click "Get Skype for Linux DEB"
+cd ~/Downloads
+sudo apt install ./skypeforlinux-64.deb
+sudo apt update
 
 curl https://repo.skype.com/data/SKYPE-GPG-KEY | sudo apt-key add -
 echo "deb https://repo.skype.com/deb stable main" | sudo tee -a /etc/apt/sources.list.d/skype.list
@@ -1183,5 +1189,11 @@ right-click "Ethernet Controller", click "Update driver"
 click "Browse my computer for drivers", click "Browse..."
 go to "<letter of virtio windows 10 drivers>:\NetKVM\w10\<your processor architecture, for example amd64>"
 click "OK", click "Next", after update the new network device should be something like "Red Hat VirtIO Ethernet Adapter"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+remote ssh machine doesn't have ssh-agent on
+
+when connecting remotely with ssh, ssh-agent on other machine doesn't start automatically
+to turn it on
+eval `ssh-agent`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
