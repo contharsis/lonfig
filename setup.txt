@@ -332,7 +332,7 @@ super
 Default Applications
 Others
 "text/plain", "application/x-shellscript", pick "Mousepad"
-"image/gif", "image/jpeg", "image/png", pick "Ristretto Image Viewer
+"image/gif", "image/jpeg", "image/png", pick "Ristretto Image Viewer"
 
 disable program reloading from last session
 close all programs
@@ -1195,5 +1195,13 @@ remote ssh machine doesn't have ssh-agent on
 when connecting remotely with ssh, ssh-agent on other machine doesn't start automatically
 to turn it on
 eval `ssh-agent`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+after wine install, .pdf files don't open properly
+
+super
+Default Application
+Others
+search "pdf"
+"application/pdf", set to "Atril Document Viewer"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
