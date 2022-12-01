@@ -921,6 +921,61 @@ sudo add-apt-repository ppa:thopiekar/openrgb
 sudo apt update
 sudo apt install openrgb
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+corectrl
+https://gitlab.com/corectrl/corectrl
+
+dependencies
+sudo apt install libdrm-dev gcc cmake libqt5svg5 qml-module-qtquick-controls qml-module-qtquick-controls2 qml-module-qtquick-controls qml-module-qtquick-layouts qml-module-qtcharts qml-module-qt-labs-platform libkf5archive5 extra-cmake-modules libqt5quickcontrols2-5 qtdeclarative5-dev libqt5charts5-dev libqt5svg5-dev qttools5-dev qttools5-dev-tools libkf5auth-dev libkf5archive-dev libbotan-2-dev libbotan-2-doc python3-botan qtdeclarative5-dev libqt5charts5-dev libqt5svg5-dev sysvinit-utils hwdata mesa-utils util-linux libquazip5-1 cmake extra-cmake-modules qttools5-dev qtdeclarative5-dev libqt5charts5-dev libqt5svg5-dev libbotan-2-dev libqca-qt5-2-dev libdrm-dev qtbase5-dev libegl1-mesa-dev libegl-dev libquazip5-dev libpolkit-gobject-1-dev libdbus-1-dev qml-module-qtqui
+
+build
+https://gitlab.com/corectrl/corectrl/-/wikis/Installation
+git clone https://gitlab.com/corectrl/corectrl.git
+cd corectrl
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF ..
+make
+
+setup
+https://gitlab.com/corectrl/corectrl/-/wikis/Setup
+
+autostart
+cp /usr/share/applications/org.corectrl.corectrl.desktop ~/.config/autostart/org.corectrl.corectrl.desktop
+
+don't ask for password on start
+pkaction --version
+
+version < 0.106
+sudo vim /etc/polkit-1/localauthority/50-local.d/90-corectrl.pkla, add
+"
+[User permissions]
+Identity=unix-group:<username>
+Action=org.corectrl.*
+ResultActive=yes
+"
+
+version >= 0.106
+sudo vim /etc/polkit-1/rules.d/90-corectrl.rules, add
+"
+polkit.addRule(function(action, subject) {
+    if ((action.id == "org.corectrl.helper.init" ||
+         action.id == "org.corectrl.helperkiller.init") &&
+        subject.local == true &&
+        subject.active == true &&
+        subject.isInGroup("<username>")) {
+            return polkit.Result.YES;
+    }
+});
+"
+
+full amd gpu controls
+add "amdgpu.ppfeaturemask=0xffffffff" to kernel boot parameters
+sudo vim /etc/default/grub
+add "amdgpu.ppfeaturemask=0xffffffff" to "GRUB_CMDLINE_LINUX_DEFAULT", so it looks like
+"GRUB_CMDLINE_LINUX_DEFAULT="amdgpu.ppfeaturemask=0xffffffff""
+sudo update-grub
+sudo reboot
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
 extra features
 
