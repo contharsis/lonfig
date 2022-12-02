@@ -192,10 +192,10 @@ lsblk
 sudo fdisk /dev/sda, create new gpt partition table, create new partition save and exit
 sudo mkfs.ext4 /dev/sda1
 
-sudo blkid
-sudo mkdir /mnt/storage
+sudo blkid, find uuid of partition /dev/sda1
+sudo mkdir /media/storage
 sudo vim /etc/fstab, add
-"UUID=<uuid of partition, /dev/sda1> <mount point, /mnt/storage> <type of device, ext4> defaults 0 2"
+"UUID=<uuid of partition /dev/sda1> <mount point, /media/storage> <type of device, ext4> defaults 0 2"
 sudo systemctl daemon-reload
 sudo reboot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
