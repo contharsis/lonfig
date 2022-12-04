@@ -809,8 +809,7 @@ https://github.com
 Settings
 Developer settings
 Personal access tokens
-click "Generate new token"
-Note, set it as the purpose of the token
+click "Generate new token", set it as the purpose of the token
 use a git command inside a repository, enter username, paste the token in password field
 the credentials will save in ~/.git-credentials in plain text
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1009,6 +1008,84 @@ GenericName=postman-9.27.0
 StartupNotify=false
 Categories=Development;REST
 "
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+build from source
+
+sudo vim /etc/apt/sources.list
+enable source repositories by removing comment from their line, change
+"
+# deb-src http://deb.debian.org/debian/ bullseye main contrib non-free
+# deb-src http://security.debian.org/debian-security bullseye-security main
+"
+to
+"
+deb-src http://deb.debian.org/debian/ bullseye main contrib non-free
+deb-src http://security.debian.org/debian-security bullseye-security main
+"
+
+sudo apt update
+sudo apt build-dep <package>
+
+cd ~/Downloads
+mkdir <package>_source
+cd <package>_source
+
+sudo apt source <package>
+cd <folder of source>
+edit source files if you want, then go back to top of source folder
+edit "debian/rules" to change build steps of package
+
+build only binaries, without signing changelog or source code changes
+sudo debuild -b -us -uc
+
+cd ..
+sudo dpkg -i <package>
+
+if you will be debugging the package
+sudo dpkg -i <package>-dbgsym
+
+apt will try to update <package> to its repository version
+here are 2 methods to prevent this
+
+~~~~~~~~~~~~~~~~
+1. set priority of remote <package> version to less than 100
+
+sudo vim /etc/apt/preferences, add
+"
+Package: <package>
+Pin: release a=<remote repository>
+Pin-Priority: 90
+"
+~~~~~~~~~~~~~~~~
+2. mark <package> with hold
+
+sudo apt-mark hold <package>
+~~~~~~~~~~~~~~~~
+
+sudo apt update
+
+if you use method 1, <package> doesn't show up as held back in "sudo apt update" and "sudo apt upgrade"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+add clipboard support to vim
+
+here are 2 methods to do this
+
+~~~~~~~~~~~~~~~~
+1. install vim-gtk3
+
+sudo apt install vim-gtk3
+~~~~~~~~~~~~~~~~
+2. install vim from source with "--with-x" feature enabled
+
+complete instructions from "extra features" section for building from source
+
+edit these source files
+sudo vim debian/rules, edit
+"NOXFLAGS = --without-x" to "NOXFLAGS = --with-x"
+
+sudo remove vim
+the package you want to install is vim_<version, 8.2.2434-3>+<debian stable updates version, deb11u1>_<architecture, amd64>.deb
+~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 create windows 10 virtual machine in qemu to do windows specific actions
 for example creating a windows usb boot usb device or downloading media creation tool
