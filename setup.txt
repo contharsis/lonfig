@@ -1033,7 +1033,8 @@ cd <package>_source
 sudo apt source <package>
 cd <folder of source>
 edit source files if you want, then go back to top of source folder
-edit "debian/rules" to change build steps of package
+edit "debian/rules" to change build steps of package and to also
+remove building of packages you won't need
 
 build only binaries, without signing changelog or source code changes
 sudo debuild -b -us -uc
@@ -1082,6 +1083,15 @@ complete instructions from "extra features" section for building from source
 edit these source files
 sudo vim debian/rules, edit
 "NOXFLAGS = --without-x" to "NOXFLAGS = --with-x"
+comment out the variants besides the one you will install, I am installing vim
+so I will comment the others so it looks like
+"
+# VARIANTS += vim-tiny
+# VARIANTS += vim-gtk3
+# VARIANTS += vim-athena
+# VARIANTS += vim-nox
+VARIANTS += vim-basic
+"
 
 sudo remove vim
 the package you want to install is vim_<version, 8.2.2434-3>+<debian stable updates version, deb11u1>_<architecture, amd64>.deb
@@ -1346,5 +1356,12 @@ Default Application
 Others
 search "pdf"
 "application/pdf", set to "Atril Document Viewer"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vim can't build from package, because some tests fail
+
+go to source folder
+sudo vim <file that test fails in>, for each failed test
+comment the test out with "
+build again
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
