@@ -1162,6 +1162,89 @@ pick "Custom: Install Windows only (advanced)", click "Load driver", click "OK"
 pick "Red Hat VirtIO SCSI controller (<letter>:\amd64\w10\viostor.inf)", click "Next"
 after your disk comes up, don't click "New", click "Next"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+minecraft modpacks
+
+setup
+
+install java 8, 17 and 19, instructions are in programs section
+
+download multimc and install it
+https://multimc.org/
+super
+MultiMC, Settings
+Java
+set minimum memory to 6 gb and maximum to 10 gb, set java path to jdk
+Accounts
+Add Microsoft, follow instructions to add account
+
+download ftb app
+https://www.feed-the-beast.com/
+
+to install it export launchers java home directory, or open installer in binary and edit it inside
+cd ~/Downloads
+chmod +x FTBA_unix_<version, 202211151621-329441ed6d-release>.sh
+
+you need to have java 17 installed
+./FTBA_unix_<version, 202211151621-329441ed6d-release>.sh
+
+if it doesn't detect jdk, export variable set to its location
+export INSTALL4J_JAVA_HOME_OVERRIDE=/usr/lib/jvm/jdk-<version of 17, 17.0.5>
+
+download curseforge cli, look in releases
+https://github.com/North-West-Wind/CurseForge-CLI
+download curseforge.zip
+chmod +x curseforge
+./curseforge help, displays all commands
+
+to search curseforge modpacks fast
+https://superstormer.github.io/cf-search/
+
+check "Show project ID", from bottom of left sidebar
+this id is needed when downloading modpack from curseforge cli
+to search modpack, change upper left corner button to "Modpacks"
+
+installing modpacks
+
+~~~~~~~~~~~~~~~~
+curseforge cli
+install curseforge modpacks
+
+./curseforge modpack install <modpack id>
+cd curseforge-cli/modpack/<modpack>
+cat manifest.json, find minecraft and forge version
+
+super
+MultiMC
+Add Instance
+set name as <modpack> and download and set icon from curseforge modpack page to launcher instance by instance and then its icon
+pick Vanilla, pick minecraft version, OK
+click instance, Edit Instance
+Version, Install Forge, pick forge version, OK
+minecraft 1.17 and above requires java 16 or above and minecraft 1.18 and above require java 17 and above
+Settings, pick correct Java installation
+Version, Open .minecraft, delete all folders inside
+
+copy all files from curseforge modpack except <modpack>.zip into multimc instance .minecraft folder
+you can delete curseforge modpack download now if you want
+~~~~~~~~~~~~~~~~
+ftb app
+install curseforge and ftb modpacks
+
+super
+FTBApp, Browse, download <modpack>
+super
+MultiMC, Add Instance, FTB App Import, pick your <modpack>
+Edit Instance, Settings, change java version if necessary
+
+you can delete ftb instance now if you want
+~~~~~~~~~~~~~~~~
+
+increase ftb app download speed
+super
+FTBApp, Settings, Downloads
+Download threads, set to logical cores
+this allows it to download faster than curseforge
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
 deprecated
 
