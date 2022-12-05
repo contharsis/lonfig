@@ -1238,6 +1238,18 @@ Edit Instance, Settings, change java version if necessary
 
 you can delete ftb instance now if you want
 ~~~~~~~~~~~~~~~~
+technic app
+https://www.technicpack.net/
+chmod +x TechnicLauncher.jar
+you need java 8 installed
+java -jar TechnicLauncher.jar
+
+install technic mods
+
+you can run the app, but you can install them from multimc directly
+super
+MultiMC, Add Instance, Technic, pick <modpack> download
+~~~~~~~~~~~~~~~~
 
 increase ftb app download speed
 super
