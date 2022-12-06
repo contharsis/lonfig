@@ -1077,7 +1077,7 @@ here are 2 methods to do this
 
 sudo apt install vim-gtk3
 ~~~~~~~~~~~~~~~~
-2. install vim from source with "--with-x" feature enabled
+2. install vim from source with "--with-x" flag enabled
 
 complete instructions from "extra features" section for building from source
 
