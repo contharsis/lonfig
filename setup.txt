@@ -1265,8 +1265,12 @@ sudo mkdir /media/bitlocker
 sudo mkdir /media/bitlockermount
 lsblk, find windows partition with bitlocker enabled
 
-sudo dislocker /dev/<windows partition with bitlocker enabled, sda2> -u -- /media/bitlocker
+sudo dislocker /dev/<windows partition with bitlocker enabled, sda2> -u<password> -- /media/bitlocker
 sudo mount -o loop /media/bitlocker/dislocker-file /media/bitlockermount
+
+if you omit <password>, you will type it interactively and it will be hidden, this is the correct way
+to decrypt, otherwise <password> will have leaked through the terminal in plain text
+only type the password after "-u" if the command is being used in a script like /etc/fstab for automatic mounting
 
 to unmount partition
 sudo umount /media/bitlockermount
