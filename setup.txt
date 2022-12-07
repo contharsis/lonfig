@@ -1492,5 +1492,6 @@ if the problems persists
 boot into windows
 open terminal as administrator
 powercfg /h off
+shutdown /s /t 0
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
