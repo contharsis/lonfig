@@ -1463,7 +1463,7 @@ when connecting remotely with ssh, ssh-agent on other machine doesn't start auto
 to turn it on
 eval `ssh-agent`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-after wine install, .pdf files don't open properly
+after wine install pdf files don't open properly
 
 super
 Default Application
@@ -1477,5 +1477,20 @@ go to source folder
 sudo vim <file that test fails in>, for each failed test
 comment the test out with "
 build again
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mount doesn't mount with full permissions (read-only) ntfs drives, windows operating systems also
+
+boot into windows
+windows button, Control Panel, Hardware and Sound, Power Options, System Settings, click "Change settings that are currently unavailable"
+uncheck "Turn on fast start-up (recommended)"
+Save changes
+open terminal
+shutdown /s /t 0
+wait for the pc to turn off without forcing it to shutdown or restart
+
+if the problems persists
+boot into windows
+open terminal as administrator
+powercfg /h off
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
