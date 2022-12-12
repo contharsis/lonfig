@@ -599,7 +599,7 @@ qbittorrent-nox - fast bittorrent client, run as a server with webui
 aria2 - fast download from anywhere and anything
 wakeonlan - turn on devices on local network, install on clients
 python3-pip - package manager for python
-qemu/virt-manager - manage virtual machines locally or remotely, install instructions in tools section
+qemu/libvirt - manage virtual machines locally or remotely, install instructions in tools section
 ca-certificates - certificate authorities
 
 deprecated
@@ -832,9 +832,9 @@ sudo reboot
 client
 wakeonlan 00:25:22:e8:7d:ba
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-qemu/virt-manager, creating virtual machines with kvm, preferable over virtualbox for performance and being better in general
+qemu/libvirt, creating virtual machines with kvm
 
-sudo apt install qemu qemu-kvm virt-manager dnsmasq vde2 bridge-utils
+sudo apt install qemu qemu-kvm virt-manager dnsmasq vde2 bridge-utils cpu-checker
 
 sudo virsh net-start default
 sudo virsh net-autostart default
@@ -848,12 +848,19 @@ virt-manager in terminal, or
 super
 Virtual Machine Manager
 
-Edit, General, check "Enable XML editing"
+Edit, Preferences, General, check "Enable XML editing"
 
 when editing a configuration, change a configuration, then without clicking "Apply" go to another one
 "There are unapplied changes. Would you like to apply them now?", check "Don't warn me again.", click "Yes"
 
 when deleting a virtual machine, right-click, click "Delete", choose only "*.qcow*" files, click "Delete", check "Don't show this message again", click "OK"
+
+check if kvm is enabled
+sudo kvm-ok, output should be like
+"
+INFO: /dev/kvm exists
+KVM acceleration can be used
+"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 java
 https://www.oracle.com/java/technologies/downloads
@@ -992,24 +999,37 @@ it should be similar to "GRUB_DEFAULT="gnulinux-advanced-38ea4a12-6cfe-4ed9-a8b5
 sudo update-grub
 sudo reboot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+installing software not from repositories
+
+sudo mkdir /opt/<software name>
+extract software/set installer location to /opt/<software name>
+
+add application entry
+vim ~/.local/share/applications/<software>.desktop
+
+add to PATH
+vim ~/.bashrc, add to end of file
+export <SOFTWARE>_HOME="/opt/<path to binaries or other executables>"
+export PATH="$<SOFTWARE>_HOME:$PATH"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 desktop and search entries for programs
 
-sudo vim /usr/share/applications/<program name>.desktop, add
+vim ~/.local/share/applications/<program, postman>.desktop, add
 "
 [Desktop Entry]
 Encoding=UTF-8
-Exec=/usr/local/lib/postman/Postman/Postman
-Icon=/usr/local/lib/Postman/app/icons/icon_128x128.png
+Exec=/opt/postman/Postman
+Icon=/opt/postman/Postman/app/icons/icon_128x128.png
 Type=Application
 Terminal=false
 Comment=API Testing Environment
 Name=Postman
-GenericName=postman-9.27.0
+GenericName=postman-10.5.2
 StartupNotify=false
 Categories=Development;REST
 "
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-build from source
+build from source (debian repositories)
 
 sudo vim /etc/apt/sources.list
 enable source repositories by removing comment from their line, change
@@ -1098,8 +1118,7 @@ sudo remove vim
 the package you want to install is vim_<version, 8.2.2434-3>+<debian stable updates version, deb11u1>_<architecture, amd64>.deb
 ~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-create windows 10 virtual machine in qemu to do windows specific actions
-for example creating a windows usb boot usb device or downloading media creation tool
+create windows 10 virtual machine in qemu/libvirt
 
 download windows 10 iso
 download virtio windows 10 drivers
@@ -1116,6 +1135,7 @@ set to windows 10 and pick "Microsoft Windows 10 (win10)", click "Forward"
 Choose Memory and CPU settings, Memory, set to atleast 4096 MiB, CPUs, set to at least 4, click "Forward"
 pick "Create a disk image for the virtual machine" set to at least 60 GiB, click "Forward"
 Ready to begin the installation, check "Customize configuration before install"
+
 XML, delete
 "
 <timer name="rtc" tickpolicy="catchup"/>
@@ -1162,6 +1182,42 @@ when you get to "Which type of installation do you want?"
 pick "Custom: Install Windows only (advanced)", click "Load driver", click "OK"
 pick "Red Hat VirtIO SCSI controller (<letter>:\amd64\w10\viostor.inf)", click "Next"
 after your disk comes up, don't click "New", click "Next"
+
+start windows 10 instance
+Device Manager
+search network adapter with yellow triangle (warning)
+if it's named something else than "Ethernet Controller" like "Red Hat VirtIO Ethernet Adapter"
+right-click it, click "Remove Device", check "Delete drivers"
+refresh device manager, now it should appear as "Ethernet Controller"
+right-click "Ethernet Controller", click "Update driver"
+click "Browse my computer for drivers", click "Browse..."
+go to "<letter of virtio windows 10 drivers>:\NetKVM\w10\<your processor architecture, for example amd64>"
+click "OK", click "Next", after update the new network device should be something like "Red Hat VirtIO Ethernet Adapter"
+
+after you complete setup successfully, you can remove SATA CDROM hardware from virtual machine
+shutdown windows 10
+super
+Virtual Machine Manager
+open windows 10 virtual machine
+Show virtual hardware details
+delete both SATA CDROM hardware
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+edit files on qemu/libvirt virtual machine through host
+
+sudo apt install libguestfs-tools
+find where .qcow2 file is
+super
+Virtual Machine Manager
+open virtual machine, Show virtual hardware details, VirtIO Disk 1, copy "Source path"
+
+list all partitions, mount each one to find which you want to edit
+sudo virt-filesystems -a <source path>
+sudo guestmount -a <source path> -m /dev/sda<digit from previous command> /mnt
+su
+ls /mnt
+do until you find partition you want to edit
+edit it
+sudo guestunmount /mnt
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 minecraft modpacks
 
@@ -1443,19 +1499,6 @@ USB Device Filters
 second icon on right is the one to add one usb device
 you can also click the first one to add a filter that enables all usb devices
 to be used inside the virtual machine
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-internet is not connected in windows 10 qemu/virtual manager virtual machine
-
-start windows 10 instance
-Device Manager
-search network adapter with yellow triangle (warning)
-if it's named something else than "Ethernet Controller" like "Red Hat VirtIO Ethernet Adapter"
-right-click it, click "Remove Device", check "Delete drivers"
-refresh device manager, now it should appear as "Ethernet Controller"
-right-click "Ethernet Controller", click "Update driver"
-click "Browse my computer for drivers", click "Browse..."
-go to "<letter of virtio windows 10 drivers>:\NetKVM\w10\<your processor architecture, for example amd64>"
-click "OK", click "Next", after update the new network device should be something like "Red Hat VirtIO Ethernet Adapter"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 remote ssh machine doesn't have ssh-agent on
 
