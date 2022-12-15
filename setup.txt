@@ -908,7 +908,7 @@ winetricks
 https://wiki.winehq.org/Winetricks
 
 install tools that are required to run winetricks
-sudo apt install cabextract, unzip, p7zip, curl, zenity
+sudo apt install cabextract unzip p7zip curl zenity
 alternatives are wget for curl, kdialog for zenity
 
 cd ~/Downloads
