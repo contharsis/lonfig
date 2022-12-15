@@ -601,6 +601,7 @@ wakeonlan - turn on devices on local network, install on clients
 python3-pip - package manager for python
 qemu/libvirt - manage virtual machines locally or remotely, install instructions in tools section
 ca-certificates - certificate authorities
+lutris - download and manage games and their runners (native, steam, wine)
 
 deprecated
 virtualbox - manage virtual machines
@@ -916,6 +917,14 @@ wget  https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetri
 chmod +x winetricks
 ./winetricks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+lutris
+https://lutris.net/downloads, follow instructions for your distribution, mine is debian
+
+echo "deb http://download.opensuse.org/repositories/home:/strycore/Debian_11/ ./" | sudo tee /etc/apt/sources.list.d/lutris.list
+wget -q https://download.opensuse.org/repositories/home:/strycore/Debian_11/Release.key -O- | sudo tee /etc/apt/trusted.gpg.d/lutris.asc -
+sudo apt update
+sudo apt install lutris
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 openrgb
 https://openrgb.org
 https://openrgb.org/up_/up_/static/releases/release_0.7/openrgb_0.7_amd64_bullseye_6128731.deb
@@ -1062,9 +1071,6 @@ GenericName=postman-10.5.2
 StartupNotify=false
 Categories=Development;REST
 "
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-adding
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 build from source (debian repositories)
 
@@ -1351,6 +1357,16 @@ FTBApp, Settings, Downloads
 Download threads, set to logical cores
 this allows it to download faster than curseforge
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+download games from lutris
+
+from the site
+https://lutris.net/
+search your game
+click install
+
+from lutris
+click + in the top right corner, search your game, click it and follow the instructions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 download steam workshop files
 
 steamcmd
@@ -1602,5 +1618,15 @@ config the game to use parameters through lutris
 Game options, "Executable" set to game .exe file, "Arguments" add parameters (my case I added -dx11)
 Runner options, "Wine version" set to lutris version, if it fails try other versions
 System options, "Default installation folder" set to installation folder of game
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+lutris
+
+if install doesn't work you can
+sudo apt download lutris
+sudo dpkg -i ./<lutris package name>
+
+if running game doesn't work, change wine version
+Lutris
+left click on game, Configure, Runner options, "Wine version" pick different version until game runs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
