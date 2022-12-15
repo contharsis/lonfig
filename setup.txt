@@ -1031,8 +1031,11 @@ sudo reboot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 installing software not from repositories
 
+mkdir ~/opt
 sudo mkdir /opt/<software name>
+
 extract software/set installer location to /opt/<software name>
+if the software can't be installed under root /opt directory, install it under ~/opt
 
 add application entry
 vim ~/.local/share/applications/<software>.desktop
@@ -1041,6 +1044,7 @@ add to PATH
 vim ~/.bashrc, add to end of file
 export <SOFTWARE>_HOME="/opt/<path to binaries or other executables>"
 export PATH="$<SOFTWARE>_HOME:$PATH"
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 desktop and search entries for programs
 
@@ -1058,6 +1062,9 @@ GenericName=postman-10.5.2
 StartupNotify=false
 Categories=Development;REST
 "
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+adding
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 build from source (debian repositories)
 
