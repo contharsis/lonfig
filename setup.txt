@@ -1358,8 +1358,7 @@ https://steamcommunity.com/app/<app_id>/workshop/, find app_id
 https://steamcommunity.com/sharedfiles/filedetails/?id=<file_id>, find file_id
 workshop_download_item <app_id> <file_id>
 
-cd <directory where file is saved, /home/<username>/.steam/debian-installation/steamapps/workshop/content/<app_id>/<file_id>/>
-cp <files> <directory where you need them>
+cd <directory where file is saved, ~/.steam/debian-installation/steamapps/workshop/content/<app_id>/<file_id>/>
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 access bitlocker enabled windows partition
 
