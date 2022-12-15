@@ -1359,13 +1359,18 @@ this allows it to download faster than curseforge
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 download games from lutris
 
+from lutris
+click + in the top right corner, Search the Lutris website for installers, search your game, click it and follow the instructions
+to install game for windows and use "Install a Windows game from media" by giving path to its executable
+to add local game use "Add locally installed game" and give path to its executable
+add splash art for game
+
 from the site
 https://lutris.net/
 search your game
 click install
 
-from lutris
-click + in the top right corner, search your game, click it and follow the instructions
+lutris search option uses the site to find the instructions to install
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 download steam workshop files
 
@@ -1621,9 +1626,12 @@ System options, "Default installation folder" set to installation folder of game
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 lutris
 
-if install doesn't work you can
+if install doesn't work
 sudo apt download lutris
 sudo dpkg -i ./<lutris package name>
+
+if that version of lutris doesn't work, you can download a different one until it works
+https://github.com/lutris/lutris/releases
 
 if running game doesn't work, change wine version
 Lutris
