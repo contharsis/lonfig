@@ -982,6 +982,36 @@ add "amdgpu.ppfeaturemask=0xffffffff" to "GRUB_CMDLINE_LINUX_DEFAULT", so it loo
 sudo update-grub
 sudo reboot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+steamcmd
+https://developer.valvesoftware.com/wiki/SteamCMD
+
+install
+
+sudo useradd -m steam
+sudo passwd steam
+sudo -u steam -s
+cd /home/steam
+
+sudo vim /etc/apt/sources.list, add "contrib non-free" at the end of all debian distribution repositories, so it looks like this
+"
+deb http://deb.debian.org/debian bullseye main contrib non-free
+deb-src http://deb.debian.org/debian bullseye main contrib non-free
+ 
+deb http://deb.debian.org/debian-security/ bullseye-security main contrib non-free
+deb-src http://deb.debian.org/debian-security/ bullseye-security main contrib non-free
+ 
+deb http://deb.debian.org/debian bullseye-updates main contrib non-free
+deb-src http://deb.debian.org/debian bullseye-updates main contrib non-free
+"
+
+sudo apt update
+sudo apt install software-properties-common lib32gcc-s1 steamcmd
+su - steam
+sudo ln -s /usr/games/steamcmd /home/steam/steamcmd
+
+run
+steamcmd
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
 extra features
 
@@ -1313,6 +1343,23 @@ super
 FTBApp, Settings, Downloads
 Download threads, set to logical cores
 this allows it to download faster than curseforge
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+download steam workshop files
+
+steamcmd
+login anonymous
+
+if the game requires authentication
+login <username> <password>
+
+https://steamcommunity.com/workshop/
+search for game
+https://steamcommunity.com/app/<app_id>/workshop/, find app_id
+https://steamcommunity.com/sharedfiles/filedetails/?id=<file_id>, find file_id
+workshop_download_item <app_id> <file_id>
+
+cd <directory where file is saved, /home/<username>/.steam/debian-installation/steamapps/workshop/content/<app_id>/<file_id>/>
+cp <files> <directory where you need them>
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 access bitlocker enabled windows partition
 
