@@ -1590,4 +1590,15 @@ open terminal as administrator
 powercfg /h off
 shutdown /s /t 0
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+problems with games who need parameters passed, like games which don't start under dx12 and need to force dx11
+
+config the game to use parameters through lutris
+Lutris
+click plus button top right corner, Add locally installed game
+Game info, "Name" set game name
+"Runner", pick "Wine (Runs Windows games)"
+Game options, "Executable" set to game .exe file, "Arguments" add parameters (my case I added -dx11)
+Runner options, "Wine version" set to lutris version, if it fails try other versions
+System options, "Default installation folder" set to installation folder of game
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
