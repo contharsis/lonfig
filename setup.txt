@@ -1262,6 +1262,37 @@ do until you find partition you want to edit
 edit it
 sudo guestunmount /mnt
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+download games from lutris
+
+from lutris
+click + in the top right corner, Search the Lutris website for installers, search your game, click it and follow the instructions
+to install game for windows and use "Install a Windows game from media" by giving path to its executable
+to add local game use "Add locally installed game" and give path to its executable
+add splash art for game
+
+from the site
+https://lutris.net/
+search your game
+click install
+
+lutris search option uses the site to find the instructions to install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+download steam workshop files
+
+steamcmd
+login anonymous
+
+if the game requires authentication
+login <username> <password>
+
+https://steamcommunity.com/workshop/
+search for game
+https://steamcommunity.com/app/<app_id>/workshop/, find app_id
+https://steamcommunity.com/sharedfiles/filedetails/?id=<file_id>, find file_id
+workshop_download_item <app_id> <file_id>
+
+cd <directory where file is saved, ~/.steam/debian-installation/steamapps/workshop/content/<app_id>/<file_id>/>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 minecraft modpacks
 
 setup
@@ -1341,7 +1372,9 @@ you can delete ftb instance now if you want
 technic app
 https://www.technicpack.net/
 chmod +x TechnicLauncher.jar
-you need java 8 installed
+you need java 8 installed, add it to PATH
+JAVA8_HOME=<path to java 8>
+export PATH="$JAVA8_HOME/bin:$PATH"
 java -jar TechnicLauncher.jar
 
 install technic mods
@@ -1357,36 +1390,34 @@ FTBApp, Settings, Downloads
 Download threads, set to logical cores
 this allows it to download faster than curseforge
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-download games from lutris
+slay the spire mods
 
-from lutris
-click + in the top right corner, Search the Lutris website for installers, search your game, click it and follow the instructions
-to install game for windows and use "Install a Windows game from media" by giving path to its executable
-to add local game use "Add locally installed game" and give path to its executable
-add splash art for game
+download java 8, check programs section
 
-from the site
-https://lutris.net/
-search your game
-click install
+download ModTheSpire from steam workshop, check steamcmd from programs section
+cp ModTheSpire.jar <game folder>
+mkdir mods
+download your mods
+cp <mod list> mods/
 
-lutris search option uses the site to find the instructions to install
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-download steam workshop files
+PATH="<path to java 8 bin folder>:$PATH"
+java -jar ModTheSpire.jar
 
-steamcmd
-login anonymous
+you can create executable and replace it in .desktop file
+vim <game folder>/run_with_mods.sh, add
+"
+#!/bin/bash
 
-if the game requires authentication
-login <username> <password>
+JAVA8_HOME=<path to java 8>
+export PATH="$JAVA8_HOME/bin:$PATH"
 
-https://steamcommunity.com/workshop/
-search for game
-https://steamcommunity.com/app/<app_id>/workshop/, find app_id
-https://steamcommunity.com/sharedfiles/filedetails/?id=<file_id>, find file_id
-workshop_download_item <app_id> <file_id>
+cd <game folder>
+java -jar ModTheSpire.jar
+"
 
-cd <directory where file is saved, ~/.steam/debian-installation/steamapps/workshop/content/<app_id>/<file_id>/>
+vim ~/.local/share/applications/Slay\ the\ Spire.desktop
+Exec, edit run.sh to run_with_mods.sh
+logout and login
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 access bitlocker enabled windows partition
 
