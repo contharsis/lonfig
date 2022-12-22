@@ -587,6 +587,7 @@ curl - transfer a URL
 wget - non-interactive network downloader
 net-tools - configure network interfaces
 gimp - graphical editor
+xclip - command line interface to X selections
 inxi - system information script
 redshift - display color temperature adjuster
 software-properties-common - manage repositories
