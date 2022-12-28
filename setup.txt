@@ -255,7 +255,7 @@ super
 Window Manager Tweaks
 Cycling, uncheck "Draw frame around selected window while cycling"
 Placement, "Minimum size of windows to trigger smart placement", set to "Large"
-Compositor, uncheck "Show windows preview in place of icons when cycling", "Show shadows under dock windows", "Show shadows under regular windows"
+Compositor, uncheck "Enable display compositing"
 
 disable workspaces
 super
@@ -364,6 +364,7 @@ Behaviour, "Middle click action", pick "Close Window"
 double-click "Clock"
 Time Settings
 Timezone, set your timezone
+Clock Options, set to hour and minutes last option
 click "Workspace Switcher", "Notification Plugin", "Action Buttons", click "Remove", click "Remove"
 if you are not on battery, click "Power Manager Plugin", click "Remove", click "Remove"
 click on all separators, except one after "Window Buttons" with "Expand" turned on, click "Remove", click "Remove"
@@ -439,8 +440,7 @@ pick "Send To", pick "Side Pane (Create Shortcut)"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 mousepad
 
-super
-Mousepad
+alt + w
 Edit
 Preferences
 Window
@@ -518,6 +518,7 @@ add extensions, for each click "Add", then check "Allow this extension to run in
 
 uBlock Origin - efficient wide-spectrum content blocker
 https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/
+open it, Open the dashboard, Settings, uncheck "Show the number of blocked requests on the icon"
 
 Dark Reader - dark mode for every website
 https://addons.mozilla.org/en-US/firefox/addon/darkreader/
@@ -530,6 +531,9 @@ check "Hide Mixes"
 check "Hide Left Sidebar Extra"
 check "Hide Explore"
 check "Trending"
+
+Vimium-FF - shortcuts on pages and more
+https://addons.mozilla.org/en-US/firefox/addon/vimium-ff/
 check "Hide Shorts Tab"
 
 Video Resumer - resumes Youtube videos from where you played them last
@@ -547,9 +551,6 @@ https://addons.mozilla.org/en-US/firefox/addon/mutelinks/
 when you have opened the tab you want to mute, right-click on it
 hover "Mutelinks"
 click "Add/edit entry to Blacklist", you can remove quotes if you want, click "Add to Blacklist"
-
-Vimium-FF - shortcuts on pages and more
-https://addons.mozilla.org/en-US/firefox/addon/vimium-ff/
 
 Privacy & Security
 Cookies and Site Data
@@ -685,10 +686,10 @@ https://gitlab.com/qbittorrent-black-theme/client
 cd ~/Downloads
 git clone https://gitlab.com/qbittorrent-black-theme/client.git
 for the theme to stay in qbittorrent, you mustn't move or delete black.qbtheme after you set it in qbittorrent,
-so put the file somewhere in configuration files, for example ~/.config/qbittorrent_theme
+so put the file somewhere in configuration files, for example ~/.config/qBittorrent, this is also the
+default qBittorrent config folder
 
-mkdir ~/.config/qbittorrent_theme
-cp client/black.qbtheme ~/.config/qbittorrent_theme
+cp client/black.qbtheme ~/.config/qBittorrent
 whoami
 super
 qBittorrent
@@ -697,7 +698,7 @@ Preferences
 Behavior
 Interface
 Use custom UI Theme
-"UI Theme file", click folder icon, set it to "/home/<username>/.config/qbittorrent_theme/black.qbtheme"
+"UI Theme file", click folder icon, set it to "/home/<username>/.config/qBittorrent/black.qbtheme"
 
 change tray icon to dark theme
 Desktop
@@ -799,7 +800,7 @@ ssh-add -l
 to check the current stored public key parameters
 ssh-add -L
 
-to transfering keys from one machine to another, you need to transfer both and set
+to transfer keys from one machine to another, you need to transfer both and set
 their permission to 600 for the private and 644 for the public key
 chmod 600 <key name>
 chmod 644 <key name>.pub
@@ -827,8 +828,7 @@ sudo ethtool enp3s0
 "Wake-on" should be "g"
 otherwise
 sudo vim /etc/network/interfaces.d/setup
-add
-"ethernet-wol g"
+add "ethernet-wol g"
 sudo reboot
 
 client
