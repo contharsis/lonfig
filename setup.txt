@@ -40,6 +40,7 @@ Device, pick usb
 Boot selection, pick linux.iso file
 click Start
 ~~~~~~~~~~~~~~~~
+
 restart, boot into usb, select "Debian Graphical Installer", install and boot into debian	
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 change session
@@ -60,13 +61,12 @@ lsblk
 sudo eject /dev/sda
 physically remove the flash drive
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-enable contrib and non-free repositories, add 32-bit support and update system
+install text editor and terminal tab completion, enable contrib and non-free repositories, add 32-bit support and update system
 
-sudo nano /etc/apt/sources.list, add
-"contrib non-free" after
-"deb http://deb.debian.org/debian/ bullseye main"
-and
-"deb-src http://deb.debian.org/debian/ bullseye main"
+sudo apt install vim bash-completion
+
+sudo vim /etc/apt/sources.list, add
+"contrib non-free" after "deb http://deb.debian.org/debian/ bullseye main" and "deb-src http://deb.debian.org/debian/ bullseye main"
 
 it should be like this
 "
@@ -75,7 +75,6 @@ deb-src http://deb.debian.org/debian/ bullseye main contrib non-free
 "
 
 sudo dpkg --add-architecture i386
-sudo apt install bash-completion vim
 sudo apt update
 sudo apt upgrade
 sudo apt autoremove
@@ -88,8 +87,7 @@ https://wiki.debian.org/GraphicsCard
 amd
 https://wiki.debian.org/AtiHowTo
 
-lspci -nn | egrep -i "3d|display|vga"
-some output should be similar to
+lspci -nn | egrep -i "3d|display|vga", some output should be similar to
 "01:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Barts PRO [Radeon HD 6850] [1002:6739]"
 
 sudo apt install firmware-amd-graphics libgl1-mesa-dri libglx-mesa0 mesa-vulkan-drivers xserver-xorg-video-all libglx-mesa0:i386 mesa-vulkan-drivers:i386 libgl1-mesa-dri:i386
@@ -134,8 +132,7 @@ sudo reboot
 nvidia
 https://wiki.debian.org/NvidiaGraphicsDrivers
 
-lspci -nn | egrep -i "3d|display|vga"
-some output should be similar to
+lspci -nn | egrep -i "3d|display|vga", some output should be similar to
 "07:00.0 VGA compatible controller [0300]: NVIDIA Corporation GM206 [GeForce GTX 960] [10de:1401] (rev a1)"
 
 sudo apt install linux-headers-amd64 nvidia-driver firmware-misc-nonfree nvidia-driver-libs:i386
@@ -155,8 +152,7 @@ https://wiki.debian.org/Mesa#Testingperformance
 sudo apt install mesa-utils
 
 check your gpu
-glxinfo | grep OpenGL
-some output should be similar to
+glxinfo | grep OpenGL, some output should be similar to
 "
 OpenGL vendor string: Intel Open Source Technology Center # The manufacturer
 OpenGL renderer string: Mesa DRI Intel(R) Haswell Desktop  # The type of the chip
@@ -164,8 +160,7 @@ OpenGL core profile version string: 3.3 (Core Profile) Mesa 10.3.2 # The OpenGL 
 OpenGL core profile shading language version string: 3.30 # The GLSL version fully supported
 "
 
-glxinfo  | grep rendering
-output should be
+glxinfo  | grep rendering, output should be
 "direct rendering: Yes"
 
 test how many frames your video card is putting out
@@ -174,15 +169,14 @@ glxgears -info
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 check if any processes failed
 
-systemctl --failed
-output should be
+systemctl --failed, output should be
 "
   UNIT LOAD ACTIVE SUB DESCRIPTION
 0 loaded units listed.
 "
+
 systemctl is-system-running
-output should be
-"running"
+output should be "running"
 
 if there are active / sub failed, check problems section, fix them
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -196,6 +190,7 @@ sudo blkid, find uuid of partition /dev/sda1
 sudo mkdir /media/storage
 sudo vim /etc/fstab, add
 "UUID=<uuid of partition /dev/sda1> <mount point, /media/storage> <type of device, ext4> defaults 0 2"
+
 sudo systemctl daemon-reload
 sudo reboot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -213,11 +208,13 @@ Application Shortcuts
 edit terminal launch shortcut
 double-click "exo-open --launch TerminalEmulator", set to "alt + d"
 
-edit firefox launch shortcut
-double-click "exo-open --launch WebBrowser", the one with "WWW" as shortcut, set to "alt + a"
+edit firefox launch shortcut, delete other shortcut
+double-click "exo-open --launch WebBrowser", one with "WWW" as shortcut, set to "alt + a"
+click "exo-open --launch WebBrowser", one with "HomePage" as shortcut, click "Remove"
 
-edit thunar launch shortcut
+edit thunar launch shortcut, delete other shortcut
 double-click "thunar", one with "super + e" as shortcut, set to "alt + e"
+click "thunar", one with "Alt + F3" as shortcut, click "Remove"
 
 edit application finder
 double-click "xfce4-appfinder", set to "super l"
@@ -290,6 +287,8 @@ alt + e
 take picture of folder background
 sudo apt install gimp
 super
+
+create background images or get them from backgrounds folder
 GNU Image Manipulation Program
 create black image with dimensions 1920x1080, name it black_bg.png, save it in ~/Desktop
 open folder, use "print screen" button
@@ -302,13 +301,12 @@ sudo vim /etc/default/grub
 to remove initial splash screen
 remove "splash" from "GRUB_CMDLINE_LINUX_DEFAULT"
 
-if you have only one operating system
+if you have only one operating system installed
 set "GRUB_TIMEOUT" to 0
 
-Change default splash screen
-add
+Change default splash screen, add
 "
-# Splash screen
+# splash screen background
 GRUB_BACKGROUND=/usr/share/pixmaps/black_bg.png
 "
 sudo update-grub
@@ -321,18 +319,15 @@ edit background and theme
 "background", set to "#000000"
 "theme-name", set to "Adwaita-dark"
 
-if you want you can add default user image, add
-"default-user-image=<path to image>"
-
-if you want to remove it, add
-"default-user-image=/usr/share/pixmaps/gray_bg.png"
+to add default user image, add "default-user-image=<path to image>"
+to remove it, add "default-user-image=/usr/share/pixmaps/gray_bg.png"
 
 edit default applications
 super
 Default Applications
 Others
-"text/plain", "application/x-shellscript", pick "Mousepad"
-"image/gif", "image/jpeg", "image/png", pick "Ristretto Image Viewer"
+"text/plain", "application/x-shellscript", "application/xml" pick "Mousepad"
+"image/gif", "image/jpeg", "image/png" pick "Ristretto Image Viewer"
 
 disable program reloading from last session
 close all programs
@@ -376,12 +371,14 @@ sudo vim /etc/xdg/menus/xfce-applications.menu, after
      <Category>X-Xfce-Toplevel</Category>
 </Include>
 "
+
 add
 "
 <Exclude>
      <Filename>xfce4-mail-reader.desktop</Filename>
 </Exclude>
 "
+
 remove all "<Separator/>" tags
 
 edit sound
@@ -425,7 +422,7 @@ check "Unlimited scrollback"
 Cursor, "Cursor shape", pick "Underline"
 Clipboard, uncheck "Show unsafe paste dialog"
 Appearance, uncheck "Display menubar in new windows"
-ctrl + shift + t
+alt + d
 alt + q
 check "Do not ask me again", click "Close Window"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -441,10 +438,7 @@ pick "Send To", pick "Side Pane (Create Shortcut)"
 mousepad
 
 alt + w
-Edit
-Preferences
-Window
-General, uncheck "Remember window state"
+Edit, Preferences, Window, General, uncheck "Remember window state"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ristretto image viewer
 
@@ -463,6 +457,10 @@ Settings
 General
 Tabs
 uncheck "Confirm before quitting with Ctrl + Q"
+
+Files and Applications
+Digital Rights Management (DRM) Content
+check "Play DRM-controlled content"
 
 Browsing
 check "Use autoscrolling"
@@ -571,7 +569,7 @@ programs
 tools
 
 install with
-sudo apt install <tool>, or if specified follow instructions in the tools section
+sudo apt install <tool>, follow instructions to install/configure in the tools section if necessary
 
 essential
 bash-completion - extend bash's standard completion
@@ -601,7 +599,7 @@ qbittorrent-nox - fast bittorrent client, run as a server with webui
 aria2 - fast download from anywhere and anything
 wakeonlan - turn on devices on local network, install on clients
 python3-pip - package manager for python
-qemu/libvirt - manage virtual machines locally or remotely, install instructions in tools section
+qemu/libvirt - manage virtual machines locally or remotely 
 ca-certificates - certificate authorities
 lutris - download and manage games and their runners (native, steam, wine)
 
@@ -689,10 +687,10 @@ for the theme to stay in qbittorrent, you mustn't move or delete black.qbtheme a
 so put the file somewhere in configuration files, for example ~/.config/qBittorrent, this is also the
 default qBittorrent config folder
 
-cp client/black.qbtheme ~/.config/qBittorrent
-whoami
 super
 qBittorrent
+cp client/black.qbtheme ~/.config/qBittorrent
+whoami
 Tools
 Preferences
 Behavior
@@ -764,7 +762,7 @@ use "git config" without "--global" to only set config for the repository you ar
 set "git config user.name" and "git config user.email" for each repository independently
 
 authentication
-
+~~~~~~~~~~~~~~~~
 ssh key
 
 cd ~/.ssh
@@ -804,7 +802,7 @@ to transfer keys from one machine to another, you need to transfer both and set
 their permission to 600 for the private and 644 for the public key
 chmod 600 <key name>
 chmod 644 <key name>.pub
-
+~~~~~~~~~~~~~~~~
 personal authentication token
 
 git config --global credential.helper store
@@ -815,6 +813,7 @@ Personal access tokens
 click "Generate new token", set it as the purpose of the token
 use a git command inside a repository, enter username, paste the token in password field
 the credentials will save in ~/.git-credentials in plain text
+~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 wakeonlan
 
@@ -850,7 +849,7 @@ virt-manager in terminal, or
 super
 Virtual Machine Manager
 
-Edit, Preferences, General, check "Enable XML editing"
+Edit, Preferences, General, General, check "Enable XML editing"
 
 when editing a configuration, change a configuration, then without clicking "Apply" go to another one
 "There are unapplied changes. Would you like to apply them now?", check "Don't warn me again.", click "Yes"
@@ -884,13 +883,15 @@ if your jdk has deb package, it will install automatically there when you run su
 if your jdk doesn't have deb package, download the "x64 Compressed Archive" version of the jdk and manually put it inside "/usr/lib/jvm"
 
 cd ~/Downloads
-sudo mv jdk-8u341-linux-x64.tar.gz /usr/lib/jvm
-sudo tar -xzvf jdk-8u341-linux-x64.tar.gz
-sudo rm jdk-8u341-linux-x64.tar.gz
+sudo mkdir /usr/local/lib/jvm
+sudo tar -xzvf <jdk>.tar.gz -C /usr/local/lib/jvm
+sudo rm <jdk>.tar.gz
+
 create link which uses the jdk
-sudo ln -s /usr/lib/jvm/<jdk>/bin/java /usr/bin/java<jdk version>
-everytime you want to use that jdks environment, change JAVA_HOME variable to that jdk
-export JAVA_HOME="/usr/lib/jvm/<jdk>"
+sudo ln -s /usr/local/lib/jvm/<jdk>/bin/java /usr/local/bin/java<jdk version>
+everytime you want to use that jdks environment, change JAVA_HOME variable to that jdk or type "java8"
+export JAVA_HOME="/usr/local/lib/jvm/<jdk>"
+export PATH="$JAVA_HOME/bin:$PATH"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 wine
 https://wiki.winehq.org/Download
@@ -941,7 +942,7 @@ corectrl
 https://gitlab.com/corectrl/corectrl
 
 dependencies
-sudo apt install libdrm-dev gcc cmake libqt5svg5 qml-module-qtquick-controls qml-module-qtquick-controls2 qml-module-qtquick-controls qml-module-qtquick-layouts qml-module-qtcharts qml-module-qt-labs-platform libkf5archive5 extra-cmake-modules libqt5quickcontrols2-5 qtdeclarative5-dev libqt5charts5-dev libqt5svg5-dev qttools5-dev qttools5-dev-tools libkf5auth-dev libkf5archive-dev libbotan-2-dev libbotan-2-doc python3-botan qtdeclarative5-dev libqt5charts5-dev libqt5svg5-dev sysvinit-utils hwdata mesa-utils util-linux libquazip5-1 cmake extra-cmake-modules qttools5-dev qtdeclarative5-dev libqt5charts5-dev libqt5svg5-dev libbotan-2-dev libqca-qt5-2-dev libdrm-dev qtbase5-dev libegl1-mesa-dev libegl-dev libquazip5-dev libpolkit-gobject-1-dev libdbus-1-dev qml-module-qtqui
+sudo apt install libdrm-dev gcc cmake libqt5svg5 qml-module-qtquick-controls qml-module-qtquick-controls2 qml-module-qtquick-controls qml-module-qtquick-layouts qml-module-qtcharts qml-module-qt-labs-platform libkf5archive5 extra-cmake-modules libqt5quickcontrols2-5 qtdeclarative5-dev libqt5charts5-dev libqt5svg5-dev qttools5-dev qttools5-dev-tools libkf5auth-dev libkf5archive-dev libbotan-2-dev libbotan-2-doc python3-botan qtdeclarative5-dev libqt5charts5-dev libqt5svg5-dev sysvinit-utils hwdata mesa-utils util-linux libquazip5-1 cmake extra-cmake-modules qttools5-dev qtdeclarative5-dev libqt5charts5-dev libqt5svg5-dev libbotan-2-dev libqca-qt5-2-dev libdrm-dev qtbase5-dev libegl1-mesa-dev libegl-dev libquazip5-dev libpolkit-gobject-1-dev libdbus-1-dev
 
 build
 https://gitlab.com/corectrl/corectrl/-/wikis/Installation
@@ -999,8 +1000,6 @@ install
 
 sudo useradd -m steam
 sudo passwd steam
-sudo -u steam -s
-cd /home/steam
 
 sudo vim /etc/apt/sources.list, add "contrib non-free" at the end of all debian distribution repositories, so it looks like this
 "
@@ -1016,8 +1015,6 @@ deb-src http://deb.debian.org/debian bullseye-updates main contrib non-free
 
 sudo apt update
 sudo apt install software-properties-common lib32gcc-s1 steamcmd
-su - steam
-sudo ln -s /usr/games/steamcmd /home/steam/steamcmd
 
 run
 steamcmd
@@ -1041,29 +1038,56 @@ sudo reboot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 installing software not from repositories
 
-mkdir ~/opt
-sudo mkdir /opt/<software name>
+sudo mkdir /opt/<software>
 
 extract software/set installer location to /opt/<software name>
-if the software can't be installed under root /opt directory, install it under ~/opt
 
 add application entry
-vim ~/.local/share/applications/<software>.desktop
+sudo vim /usr/share/applications/<software>.desktop
 
 add to PATH
 vim ~/.bashrc, add to end of file
-export <SOFTWARE>_HOME="/opt/<path to binaries or other executables>"
-export PATH="$<SOFTWARE>_HOME:$PATH"
+export <SOFTWARE>_HOME="/opt/<software>"
+export PATH="$<SOFTWARE>_HOME/<path to binaries or other executables>:$PATH"
 
+if software doesn't work in /opt
+mkdir ~/opt
+repeat installation steps
+
+add application entry
+sudo vim ~/.local/share/applications/<software>.desktop
+
+add to PATH
+whoami, your username
+vim ~/.bashrc, add to end of file
+export <SOFTWARE>_HOME="/home/<username>/<software>"
+export PATH="$<SOFTWARE>_HOME/<path to binaries or other executables>:$PATH"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-desktop and search entries for programs
+desktop and search entries for software
 
-vim ~/.local/share/applications/<program, postman>.desktop, add
+sudo vim /usr/share/applications/<software, postman>.desktop, add
 "
 [Desktop Entry]
 Encoding=UTF-8
 Exec=/opt/postman/Postman
 Icon=/opt/postman/Postman/app/icons/icon_128x128.png
+Type=Application
+Terminal=false
+Comment=API Testing Environment
+Name=Postman
+GenericName=postman-10.5.2
+StartupNotify=false
+Categories=Development;REST
+"
+
+if software is installed locally
+whoami, your username
+sudo vim ~/.local/share/applications/<software, postman>.desktop, add
+"
+[Desktop Entry]
+Encoding=UTF-8
+Exec=/home/<username>/opt/postman/Postman
+Icon=/home/<username>/opt/postman/Postman/app/icons/icon_128x128.png
 Type=Application
 Terminal=false
 Comment=API Testing Environment
@@ -1081,6 +1105,7 @@ enable source repositories by removing comment from their line, change
 # deb-src http://deb.debian.org/debian/ bullseye main contrib non-free
 # deb-src http://security.debian.org/debian-security bullseye-security main
 "
+
 to
 "
 deb-src http://deb.debian.org/debian/ bullseye main contrib non-free
@@ -1112,7 +1137,6 @@ sudo dpkg -i <package>-dbgsym
 
 apt will try to update <package> to its repository version
 here are 2 methods to prevent this
-
 ~~~~~~~~~~~~~~~~
 1. set priority of remote <package> version to less than 100
 
@@ -1135,7 +1159,6 @@ if you use method 1, <package> doesn't show up as held back in "sudo apt update"
 add clipboard support to vim
 
 here are 2 methods to do this
-
 ~~~~~~~~~~~~~~~~
 1. install vim-gtk3
 
@@ -1177,7 +1200,7 @@ Choose ISO or CDROM install media, click "Browse...", pick windows 10 iso
 Choose the operating system you are installing, uncheck "Automatically detect from the installation media / source"
 set to windows 10 and pick "Microsoft Windows 10 (win10)", click "Forward"
 Choose Memory and CPU settings, Memory, set to atleast 4096 MiB, CPUs, set to at least 4, click "Forward"
-pick "Create a disk image for the virtual machine" set to at least 60 GiB, click "Forward"
+pick "Create a disk image for the virtual machine" set to at least 40 GiB, click "Forward"
 Ready to begin the installation, check "Customize configuration before install"
 
 XML, delete
@@ -1187,8 +1210,7 @@ XML, delete
 "
 
 set "present" to "yes" in
-"<timer name="hpet" present="no"/>", so it looks like
-"<timer name="hpet" present="yes"/>"
+"<timer name="hpet" present="no"/>", so it looks like "<timer name="hpet" present="yes"/>"
 click "Apply"
 
 CPUs
@@ -1214,7 +1236,7 @@ click "Apply"
 click "Add Hardware"
 pick Storage
 Details
-"Device type", pick CDROM device
+"Device type", pick "CDROM device"
 click "Finish"
 
 SATA CDROM 2
@@ -1265,7 +1287,11 @@ sudo guestunmount /mnt
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 download games from lutris
 
-from lutris
+if you are downloading game which has launcher like battle net, origin, etc. download the launcher, then download the game
+from the launcher
+
+super
+Lutris
 click + in the top right corner, Search the Lutris website for installers, search your game, click it and follow the instructions
 to install game for windows and use "Install a Windows game from media" by giving path to its executable
 to add local game use "Add locally installed game" and give path to its executable
@@ -1288,6 +1314,7 @@ login <username> <password>
 
 https://steamcommunity.com/workshop/
 search for game
+
 https://steamcommunity.com/app/<app_id>/workshop/, find app_id
 https://steamcommunity.com/sharedfiles/filedetails/?id=<file_id>, find file_id
 workshop_download_item <app_id> <file_id>
@@ -1336,7 +1363,6 @@ this id is needed when downloading modpack from curseforge cli
 to search modpack, change upper left corner button to "Modpacks"
 
 installing modpacks
-
 ~~~~~~~~~~~~~~~~
 curseforge cli
 install curseforge modpacks
@@ -1397,15 +1423,18 @@ download java 8, check programs section
 
 download ModTheSpire from steam workshop, check steamcmd from programs section
 cp ModTheSpire.jar <game folder>
+cd <game folder>
 mkdir mods
 download your mods
-cp <mod list> mods/
+cp <mod list> mods
 
-PATH="<path to java 8 bin folder>:$PATH"
+run
+export PATH="<path to java 8 bin folder>:$PATH"
 java -jar ModTheSpire.jar
 
-you can create executable and replace it in .desktop file
-vim <game folder>/run_with_mods.sh, add
+you can create executable and replace it in .desktop file to automatically run with mods
+cd <game folder>
+vim run_with_mods.sh, add
 "
 #!/bin/bash
 
@@ -1416,8 +1445,10 @@ cd <game folder>
 java -jar ModTheSpire.jar
 "
 
+chmod +x run_with_mods.sh
+
 vim ~/.local/share/applications/Slay\ the\ Spire.desktop
-Exec, edit run.sh to run_with_mods.sh
+Exec, edit "run.sh" to "run_with_mods.sh"
 logout and login
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 access bitlocker enabled windows partition
@@ -1544,10 +1575,17 @@ W: GPG error: http://www.deb-multimedia.org jessie InRelease: The following sign
 E: The repository 'http://www.deb-multimedia.org jessie InRelease' is not signed.
 N: Updating from such a repository can't be done securely, and is therefore disabled by default.
 
+~~~~~~~~~~~~~~~~
+solution 1
+
 sudo vim /etc/apt/sources.list.d/<repo>.list
-add "[trusted=yes]" after "deb" and before "<repo link> <distribution> <branch>"
-so it looks like
-"deb [trusted=yes] <repo link> <distribution> <branch>"
+add "[trusted=yes]" after "deb" so it looks like "deb [trusted=yes] <repo link> <distribution> <branch>"
+~~~~~~~~~~~~~~~~
+solution 2
+
+sudo vim /etc/apt/sources.list.d/<repo>.list
+add "[arch=amd64]" after "deb" so it looks like "deb [arch=amd64] <repo link> <distribution> <branch>"
+~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 after wine install you don't have Open With Wine Windows Program Loader in applications launch menu
 
@@ -1563,7 +1601,9 @@ sudo reboot
 certificate errors
 "ERROR: The certificate of <url> is not trusted / hasn't got a known issuer."
 
+~~~~~~~~~~~~~~~~
 solution 1
+
 if your system time isn't valid
 
 sudo apt install ntpdate
@@ -1574,10 +1614,11 @@ your hardware clock should be utc, and the system should adapt it's timezone to 
 
 if you have windows for dual booting (which causes the problem in the first place)
 add dword registry "RealTimeIsUniversal" set to 1 in "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" 
-
+~~~~~~~~~~~~~~~~
 solution 2
 sudo apt install ca-certificates
 or when using wget add flag --no-check-certificate
+~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 usb device doesn't show in windows 10 in virtual box
 
@@ -1662,11 +1703,20 @@ if install doesn't work
 sudo apt download lutris
 sudo dpkg -i ./<lutris package name>
 
-if that version of lutris doesn't work, you can download a different one until it works
+if that version of lutris doesn't work or has dependency problems, you can download a different one until it works
 https://github.com/lutris/lutris/releases
 
 if running game doesn't work, change wine version
+super
 Lutris
 left click on game, Configure, Runner options, "Wine version" pick different version until game runs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+software icon doesn't show in application finder after building from source
+
+find where software icons are and choose one, for me it's /usr/share/icons/hicolor/256x256/apps/<software>.svg
+sudo vim <location of software .desktop file, /usr/share/applications/<software>.desktop>
+change "Icon" to "Icon=/usr/share/icons/hicolor/256x256/apps/<software>.svg"
+
+logout and login
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
