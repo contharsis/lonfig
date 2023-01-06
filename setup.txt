@@ -1130,10 +1130,10 @@ build only binaries, without signing changelog or source code changes
 sudo debuild -b -us -uc
 
 cd ..
-sudo dpkg -i <package>
+sudo apt install ./<package>
 
 if you will be debugging the package
-sudo dpkg -i <package>-dbgsym
+sudo apt install ./<package>-dbgsym
 
 apt will try to update <package> to its repository version
 here are 2 methods to prevent this
