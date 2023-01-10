@@ -332,7 +332,14 @@ Others
 disable program reloading from last session
 close all programs
 alt + q
-uncheck "Save session for future logins", pick "Log Out", log in 
+uncheck "Save session for future logins", pick "Log Out", log in
+
+super
+Mouse and Touchpad
+Devices,
+for each mouse device
+Buttons and Feedback, Pointer Speed
+"Acceleration" set to 0.0
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 edit panels
 
