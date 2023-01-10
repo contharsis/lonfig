@@ -340,6 +340,7 @@ Devices,
 for each mouse device
 Buttons and Feedback, Pointer Speed
 "Acceleration" set to 0.0
+you might have to increase your mouse dpi, because it will be quite slower now
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 edit panels
 
