@@ -1761,3 +1761,31 @@ change "Icon" to "Icon=/usr/share/icons/hicolor/256x256/apps/<software>.svg"
 logout and login
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
+wsl
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+dns resolution failed
+
+sudo vim /etc/wsl.conf, add
+"
+[network]
+generateResolvConf = false
+"
+
+sudo vim /etc/resolv.conf, add
+"
+# google
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ssl verification failed
+
+open zscaler.com, click address bar key icon, click view certificate, click copy to file
+"Select the format you want to use", set to Base-64 encoded X.509 (.CER)
+after downloading all certificates change extensions from ".cer" to ".crt"
+
+sudo mv <certificates> /usr/local/share/ca-certificates/
+sudo update-ca-certificates --fresh
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------------------------------------------
