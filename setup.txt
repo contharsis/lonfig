@@ -429,7 +429,9 @@ Scrolling
 check "Unlimited scrollback"
 Cursor, "Cursor shape", pick "Underline"
 Clipboard, uncheck "Show unsafe paste dialog"
-Appearance, uncheck "Display menubar in new windows"
+Appearance
+Background, check None (use solid color)
+Opening New Windows, uncheck "Display menubar in new windows"
 alt + d
 alt + q
 check "Do not ask me again", click "Close Window"
