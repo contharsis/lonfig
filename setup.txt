@@ -1586,6 +1586,12 @@ casper-md5check.service failed
 sudo systemctl disable casper-md5check.service
 sudo reboot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+strange behaviours with programs which are under new mount point
+
+make it owned by your user instead of root
+whoami, your username
+sudo chown -R <username>: /media/storage
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 untrusted stored key
 
 W: <repo url> Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION
