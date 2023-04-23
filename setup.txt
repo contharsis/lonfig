@@ -65,16 +65,21 @@ install text editor and terminal tab completion, enable contrib and non-free rep
 
 sudo apt install vim bash-completion
 
-sudo vim /etc/apt/sources.list, add
-"contrib non-free" after "deb http://deb.debian.org/debian/ bullseye main" and "deb-src http://deb.debian.org/debian/ bullseye main"
-
+sudo vim /etc/apt/sources.list, add "contrib non-free" after each entry 
 it should be like this
 "
 deb http://deb.debian.org/debian/ bullseye main contrib non-free
 deb-src http://deb.debian.org/debian/ bullseye main contrib non-free
+
+deb http://security.debian.org/debian-security bullseye-security main contrib non-free
+deb-src http://security.debian.org/debian-security bullseye-security main contrib non-free
+
+deb http://deb.debian.org/debian/ bullseye-updates main contrib non-free
+deb-src http://deb.debian.org/debian/ bullseye-updates main contrib non-free
 "
 
 sudo dpkg --add-architecture i386
+
 sudo apt update
 sudo apt upgrade
 sudo apt autoremove
@@ -90,7 +95,13 @@ https://wiki.debian.org/AtiHowTo
 lspci -nn | egrep -i "3d|display|vga", some output should be similar to
 "01:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Barts PRO [Radeon HD 6850] [1002:6739]"
 
-sudo apt install firmware-amd-graphics libgl1-mesa-dri libglx-mesa0 mesa-vulkan-drivers xserver-xorg-video-all libglx-mesa0:i386 mesa-vulkan-drivers:i386 libgl1-mesa-dri:i386
+sudo apt install firmware-amd-graphics libgl1-mesa-dri libglx-mesa0 mesa-vulkan-drivers xserver-xorg-video-all
+sudo reboot
+
+sudo apt install libglx-mesa0:i386 mesa-vulkan-drivers:i386 libgl1-mesa-dri:i386
+sudo apt update
+sudo apt upgrade
+sudo apt autoremove
 sudo reboot
 
 usage check
@@ -180,6 +191,13 @@ output should be "running"
 
 if there are active / sub failed, check problems section, fix them
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+if your resolution is different than your hardware
+
+sudo vim /etc/default/grub
+set "GRUB_GFXMODE" to your resolution, so it looks something like this "GRUB_GFXMODE=1920x1080"
+sudo update-grub
+sudo reboot
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 add devices to fstab
 
 lsblk
@@ -225,6 +243,9 @@ double-click "xfce4-session-logout", set to "alt + x"
 add mousepad launch shortcut
 click "Add", set "Command" to "mousepad", click "OK", set to "alt + w"
 
+edit screenshooter launch shortcut if it doesn't start when pressing "prtsc"
+double-click "xfce4-screenshooter", set to "insert" or whichever button comes when pressing "prtsc"
+
 Layout
 click "Add", add your language
 "Change layout option", pick combination to change your language
@@ -246,6 +267,9 @@ double-click "Maximize window", set to "alt + f"
 
 change hide window shortcut
 double-click "Hide window", set to "alt + z"
+
+remove adding of workspace
+click "Add workspace", click "Clear"
 
 disable frame around selected windows, center all windows, disable dimming on unfocused windows
 super
@@ -284,11 +308,11 @@ uncheck all
 
 edit grub
 alt + e
-take picture of folder background
+take picture of folder background, you can use "prtsc" key on keyboard
 sudo apt install gimp
-super
 
 create background images or get them from backgrounds folder
+super
 GNU Image Manipulation Program
 create black image with dimensions 1920x1080, name it black_bg.png, save it in ~/Desktop
 open folder, use "print screen" button
@@ -333,14 +357,6 @@ disable program reloading from last session
 close all programs
 alt + q
 uncheck "Save session for future logins", pick "Log Out", log in
-
-super
-Mouse and Touchpad
-Devices,
-for each mouse device
-Buttons and Feedback, Pointer Speed
-"Acceleration" set to 0.0
-you might have to increase your mouse dpi, because it will be quite slower now
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 edit panels
 
@@ -367,7 +383,7 @@ Behaviour, "Middle click action", pick "Close Window"
 double-click "Clock"
 Time Settings
 Timezone, set your timezone
-Clock Options, set to hour and minutes last option
+Clock Options, Format set to Custom Format, set to "%H:%M"
 click "Workspace Switcher", "Notification Plugin", "Action Buttons", click "Remove", click "Remove"
 if you are not on battery, click "Power Manager Plugin", click "Remove", click "Remove"
 click on all separators, except one after "Window Buttons" with "Expand" turned on, click "Remove", click "Remove"
@@ -393,13 +409,6 @@ edit sound
 move mouse to bottom right of taskbar
 click sound plugin
 set everything to "100%"
-
-edit notifications
-super
-Notifications
-General
-Appearance, "Opacity", set to "100%"
-Animations, uncheck "Fade out"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 edit displays
 
@@ -416,7 +425,24 @@ turn off sleep
 super
 Power Manager, Display
 uncheck "Display power management"
-"Blank after", set to "Never"
+set "Blank after" to "Never"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+edit screenshooter
+
+super
+Screenshot
+Region to capture, set to "Select a region"
+uncheck "Capture the mouse pointer"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+disable mouse acceleration
+
+super
+Mouse and Touchpad
+Devices,
+for each mouse device
+Buttons and Feedback, Pointer Speed
+"Acceleration" set to 0.0
+you might have to increase your mouse dpi, because it will be quite slower now
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 terminal
 
@@ -430,10 +456,13 @@ check "Unlimited scrollback"
 Cursor, "Cursor shape", pick "Underline"
 Clipboard, uncheck "Show unsafe paste dialog"
 Appearance
-Background, check None (use solid color)
 Opening New Windows, uncheck "Display menubar in new windows"
-alt + d
-alt + q
+Tabs
+check "Use custom styling to make tabs slim (restart required)"
+
+open new terminal, alt + d
+open 2 tabs, ctrl + shift + t
+try to close the whole terminal, alt + q
 check "Do not ask me again", click "Close Window"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 thunar
@@ -460,7 +489,19 @@ Behaviour
 Startup, uncheck "Maximize window on startup when opening an image"
 View, uncheck "Show Thumbnail Bar"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+notifications
+
+super
+Notifications
+General
+Appearance, "Opacity", set to "100%"
+Disappear after, set to 5 seconds
+Animations, uncheck "Fade out"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 firefox
+
+super
+Firefox	ESR
 
 Settings
 
@@ -531,6 +572,9 @@ open it, Open the dashboard, Settings, uncheck "Show the number of blocked reque
 Dark Reader - dark mode for every website
 https://addons.mozilla.org/en-US/firefox/addon/darkreader/
 
+600% Sound Volume - control volume
+https://addons.mozilla.org/en-US/firefox/addon/600-sound-volume/
+
 Unhook - hide youtube sections
 https://addons.mozilla.org/en-US/firefox/addon/youtube-recommended-videos/
 open it, change to dark mode and turn it on with top right buttons
@@ -560,6 +604,9 @@ when you have opened the tab you want to mute, right-click on it
 hover "Mutelinks"
 click "Add/edit entry to Blacklist", you can remove quotes if you want, click "Add to Blacklist"
 
+Youtube NonStop - autoclicks video paused box
+https://addons.mozilla.org/en-US/firefox/addon/youtube-nonstop/
+
 Privacy & Security
 Cookies and Site Data
 click "Clear Data..."
@@ -584,6 +631,7 @@ sudo apt install <tool>, follow instructions to install/configure in the tools s
 essential
 bash-completion - extend bash's standard completion
 vim - text editor
+eject - eject removable media
 build-essential - building and compiling tools
 git - content tracker
 openssh-client - ssh client
@@ -640,6 +688,15 @@ reboot router
 
 to connect to server
 ssh -p <external port> <username>@<public ip or internal ip> 
+
+to disable client disconnecting from idle timeout
+ssh into server
+sudo vim /etc/ssh/sshd_config
+set "ClientAliveInterval" to 60
+
+you can change it from client side too (both are unnecessary)
+sudo vim /etc/ssh/ssh_config
+set "ServerAliveInterval" to 60
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 redshift
 
@@ -1013,17 +1070,7 @@ install
 sudo useradd -m steam
 sudo passwd steam
 
-sudo vim /etc/apt/sources.list, add "contrib non-free" at the end of all debian distribution repositories, so it looks like this
-"
-deb http://deb.debian.org/debian bullseye main contrib non-free
-deb-src http://deb.debian.org/debian bullseye main contrib non-free
- 
-deb http://deb.debian.org/debian-security/ bullseye-security main contrib non-free
-deb-src http://deb.debian.org/debian-security/ bullseye-security main contrib non-free
- 
-deb http://deb.debian.org/debian bullseye-updates main contrib non-free
-deb-src http://deb.debian.org/debian bullseye-updates main contrib non-free
-"
+enable contrib and non-free repositories in sources
 
 sudo apt update
 sudo apt install software-properties-common lib32gcc-s1 steamcmd
@@ -1051,6 +1098,12 @@ curl -fsSL 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xc0d54c34d001
 
 sudo apt-get update
 sudo apt install polychromatic
+
+disable desktop notifications
+super
+Polychromatic
+Tools, OpenRazer, Configure.., Daemon
+uncheck "Show battery notifications"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
 extra features
@@ -1137,12 +1190,14 @@ enable source repositories by removing comment from their line, change
 "
 # deb-src http://deb.debian.org/debian/ bullseye main contrib non-free
 # deb-src http://security.debian.org/debian-security bullseye-security main
+# deb-src http://deb.debian.org/debian/ bullseye-updates main contrib non-free
 "
 
 to
 "
 deb-src http://deb.debian.org/debian/ bullseye main contrib non-free
 deb-src http://security.debian.org/debian-security bullseye-security main
+deb-src http://deb.debian.org/debian/ bullseye-updates main contrib non-free
 "
 
 sudo apt update
@@ -1428,6 +1483,12 @@ MultiMC, Add Instance, FTB App Import, pick your <modpack>
 Edit Instance, Settings, change java version if necessary
 
 you can delete ftb instance now if you want
+
+increase ftb app download speed
+super
+FTBApp, Settings, Downloads
+Download threads, set to logical cores
+this allows it to download faster than curseforge
 ~~~~~~~~~~~~~~~~
 technic app
 https://www.technicpack.net/
@@ -1442,13 +1503,6 @@ install technic mods
 you can run the app, but you can install them from multimc directly
 super
 MultiMC, Add Instance, Technic, pick <modpack> download
-~~~~~~~~~~~~~~~~
-
-increase ftb app download speed
-super
-FTBApp, Settings, Downloads
-Download threads, set to logical cores
-this allows it to download faster than curseforge
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 slay the spire mods
 
