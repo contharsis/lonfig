@@ -1556,6 +1556,47 @@ to unmount partition
 sudo umount /media/bitlockermount
 sudo umount /media/bitlocker
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+resize partition
+
+download gparted live https://gparted.org/download.php
+
+put usb drive in pc
+
+cd ~/Downloads
+sudo dd gparted-live-<version>-<architecture>.iso /dev/sdx
+sudo reboot
+
+pick gparted live
+open partitioner and resize partition
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ventoy
+https://www.ventoy.net/en/download.html
+
+used to boot into operating systems
+have your operating system iso available
+
+download ventoy-<version>-livecd.iso
+put usb in pc
+cd ~/Download
+sudo dd if=ventoy-<version>-livecd.iso of=/dev/sdx status=progress
+sudo mount /dev/sdx1 /mnt
+sudo cp <operating system, windows.iso> /dev/sdx1
+sudo umount /dev/sdx1
+sudo eject /dev/sdx 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+install windows
+
+download windows image https://www.microsoft.com/bg-bg/software-download/windows10ISO
+
+use gparted to resize partition minimum 60 gb
+use ventoy to install windows
+boot into bios, remove windows boot manager from booting devices
+boot into linux
+sudo update-grub
+sudo reboot
+
+you need GRUB_TIMEOUT to be bigger than 0
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------
 deprecated
 
@@ -1812,7 +1853,9 @@ https://github.com/lutris/lutris/releases
 if running game doesn't work, change wine version
 super
 Lutris
-left click on game, Configure, Runner options, "Wine version" pick different version until game runs
+left click on game, Configure, Runner options, "Wine version" pick different version
+if it still isn't running
+left click on game, Configure, Runner options, "DXVK version" pick different version
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 software icon doesn't show in application finder after building from source
 
