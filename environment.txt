@@ -1,0 +1,7 @@
+----------------------------------------
+disable grub timeout, useful if you have only 1 operating system
+
+sudo vim /etc/default/grub
+set GRUB_TIMEOUT=0
+sudo update-grub
+----------------------------------------

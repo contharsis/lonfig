@@ -1,0 +1,23 @@
+----------------------------------------
+download latest stable debian version
+
+small ISO image for internet connection, installs core debian, then only necessary software
+https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/ - debian-<version>-amd64-netinst.iso
+
+big live ISO image, complete installation, doesn't require internet connection
+https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/ - debian-live-<version>-amd64-xfce.iso
+
+get flash drive with enough capacity for ISO, burn ISO on it, boot it, pick "Graphical install"
+----------------------------------------
+desktop environment
+
+during "Software selection"
+graphics environment - check only "Xfce"
+headless (server) - uncheck "Debian desktop environment"
+----------------------------------------
+remove flash drive after install
+
+reboot into debian
+lsblk
+sudo eject /dev/<drive>
+----------------------------------------
